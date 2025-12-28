@@ -1,27 +1,42 @@
-.container {
+.auth-page {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #6a11cb, #2575fc);
-  font-family: 'Poppins', sans-serif;
-  padding: 1rem;
+  width: 100%;
+
 }
 
 .form-wrapper {
-  background-color: #fff;
+  background-color: #c0f1ff;
+  background-color: var(--primary-background);
   padding: 2.5rem 2rem;
+  margin: 10px 0px;
   border-radius: 15px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  width: 100%;
   max-width: 400px;
+  width: calc(100% - 15px);
+
+  .form-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    img{
+      height: 80px;
+
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      color: #FFFFFF;
+      display: none;
+    }
+  }
+
 }
 
-h2 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
+
 
 form {
   display: flex;
@@ -33,7 +48,7 @@ label {
   display: flex;
   flex-direction: column;
   font-size: 0.9rem;
-  color: #555;
+  color: #fff;
 }
 
 input {
@@ -43,6 +58,9 @@ input {
   border-radius: 8px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
+  &.warning{
+    border-color: red;
+  }
 }
 
 input:focus {
@@ -53,7 +71,7 @@ input:focus {
 
 button {
   padding: 0.8rem;
-  background: #6a11cb;
+  background: #000;
   color: #fff;
   font-weight: bold;
   border: none;
@@ -71,7 +89,8 @@ button:hover {
     padding: 2rem 1.5rem;
   }
 
-  input, button {
+  input,
+  button {
     font-size: 0.9rem;
   }
 }

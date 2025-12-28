@@ -1,6 +1,8 @@
 {
   "name": "library-management",
   "version": "0.1.0",
+  "node": "v21",
+  "nvm": "0.39.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -12,6 +14,7 @@
     "next": "16.1.1",
     "react": "19.2.3",
     "react-dom": "19.2.3",
+    "react-toastify": "^11.0.5",
     "sass": "^1.97.1"
   },
   "devDependencies": {
