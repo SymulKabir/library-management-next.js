@@ -2,7 +2,7 @@
 import { useState } from "react";
 import "./styles.scss";
 import Image from "next/image";
-import { promiseToast,  warningToast } from "@/shared/utils/toast";
+import { promiseToast, warningToast } from "@/shared/utils/toast";
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -11,7 +11,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-const [warnings, setWarnings] = useState<Record<string, boolean>>({});
+  const [warnings, setWarnings] = useState<Record<string, boolean>>({});
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,37 +43,34 @@ const [warnings, setWarnings] = useState<Record<string, boolean>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) {
-      return;
-    }
+    if (!validateForm()) return;
 
     const apiCall = async () => {
-      // Simulate API call delay
       const response = await fetch("/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      const { data, message } = await response.json();
 
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.message || "Signup failed");
+      if (!data) {
+        throw new Error(message || "Signup failed");
       }
-
-      return response.json();
+      return data;
     };
 
     try {
       const result = await promiseToast(apiCall(), {
         pending: "Signing up...",
         success: "Signup successful!",
-        error: "Signup failed!",
+        error: "Signup failed. Please try again.",
       });
       console.log("API Result:", result);
-    } catch (error) {
-      console.error("Signup error:", error);
+    } catch (err) {
+      console.error("Signup error:", err);
     }
   };
+
 
   const getWarningClass = (field: string) => {
     return warnings[field] ? "warning" : "";
