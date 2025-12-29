@@ -1,8 +1,8 @@
 {
   "name": "library-management",
   "version": "0.1.0",
-  "node": "v21",
-  "nvm": "0.39.1",
+  "node": "v21.7.3",
+  "nvm": "0.39.5",
   "private": true,
   "scripts": {
     "dev": "next dev",
