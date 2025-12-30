@@ -5,7 +5,6 @@ import { MdOutlineKeyboardCommandKey } from "react-icons/md";
 import { CiBellOn } from "react-icons/ci";
 import { CiMail } from "react-icons/ci";
 import { BsSearch } from "react-icons/bs";
-import { CiSearch } from "react-icons/ci";
 
 const DashboardHeader = () => {
   return (
@@ -13,7 +12,7 @@ const DashboardHeader = () => {
       <div className="dashboard-header-section-container box-shadow">
         <div className="search-box">
           <BsSearch/>
-          <input type="text" />
+          <input type="text" placeholder="Search here" />
           <button>
             <MdOutlineKeyboardCommandKey />
             <bold>F</bold>
@@ -32,7 +31,7 @@ const DashboardHeader = () => {
 
           <div className="header-actions">
             <div className="img-container">
-              <Image src={""} height={100} width={100} alt="" />
+              <Image src={"/assets/man.png"} height={100} width={100} alt="" />
             </div>
             <div className="name-container">
               <h2>Symul Kabir</h2>

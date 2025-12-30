@@ -18,6 +18,7 @@
       background-color: #ffffff;
       align-items: center;
       gap: 3px;
+
       svg {
         height: 16px;
       }
@@ -29,6 +30,9 @@
         outline: none;
         padding: 0px;
         height: 100%;
+      }
+      input{
+        padding-left: 5px;
       }
       button {
         width: max-content;
@@ -48,15 +52,15 @@
     .profile-container {
       display: flex;
       gap: 10px;
-      background-color: red;
-      width: max-content;
       .action-menu {
         display: flex;
-        gap: 10px;
+        gap: 10px; 
         button {
           background-color: #fff;
           height: 100%;
-          aspect-ratio: 1/1;
+          height: 30px;
+          width: 30px;
+          border-radius: 50%;
           border: none;
           outline: none;
           padding: 0px;
@@ -71,14 +75,17 @@
         align-items: center;
         gap: 5px;
         .img-container {
-          height: 30px;
+          height: 40px;
           aspect-ratio: 1/1;
           overflow: hidden;
           background-color: #ffffff;
           border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           img {
-            height: inherit;
-            width: auto;
+            width: calc(100% - 15px);
+            height: calc(100% - 15px);
           }
         }
         .name-container {
