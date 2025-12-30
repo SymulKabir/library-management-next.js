@@ -3,6 +3,8 @@ import { useState } from "react";
 import "./styles.scss";
 import Image from "next/image";
 import { promiseToast, warningToast } from "@/shared/utils/toast";
+import Link from "next/link";
+import HeaderLayout from "@/shared/layouts/HeaderLayout";
 
 const Signup = () => {
   const [form, setForm] = useState({
@@ -12,7 +14,6 @@ const Signup = () => {
     confirmPassword: "",
   });
   const [warnings, setWarnings] = useState<Record<string, boolean>>({});
-
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -71,78 +72,83 @@ const Signup = () => {
     }
   };
 
-
   const getWarningClass = (field: string) => {
     return warnings[field] ? "warning" : "";
   };
 
   return (
-    <div className="container ">
-      <div className="auth-page">
-        <div className="form-wrapper">
-          <div className="form-header">
-            <Image
+    <HeaderLayout>
+      <div className="container ">
+        <div className="auth-page">
+          <div className="form-wrapper">
+            <div className="form-header">
+              {/* <Image
               src="/logo.png"
               alt="Library Logo"
               width={100}
               height={100}
-            />
-            <h2>Library Signup</h2>
+            /> */}
+              <h2>Library Signup</h2>
+            </div>
+            <form onSubmit={handleSubmit} autoComplete="off">
+              <label>
+                Full Name
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder="John Doe"
+                  className={getWarningClass("name")}
+                  autoComplete="off"
+                />
+              </label>
+              <label>
+                Email
+                <input
+                  type="text"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder="john@example.com"
+                  className={getWarningClass("email")}
+                  autoComplete="off"
+                />
+              </label>
+              <label>
+                Password
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="********"
+                  className={getWarningClass("password")}
+                  autoComplete="off"
+                />
+              </label>
+              <label>
+                Confirm Password
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="********"
+                  className={getWarningClass("confirmPassword")}
+                  autoComplete="off"
+                />
+              </label>
+              <button type="submit">Sign Up</button>
+              <div className="nav">
+                <p>Already have an account?</p>
+                <Link href={"/signin"}>Sing In</Link>
+              </div>
+            </form>
           </div>
-          <form onSubmit={handleSubmit} autoComplete="off">
-            <label>
-              Full Name
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="John Doe"
-                className={getWarningClass("name")}
-                autoComplete="off"
-              />
-            </label>
-            <label>
-              Email
-              <input
-                type="text"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="john@example.com"
-                className={getWarningClass("email")}
-                autoComplete="off"
-              />
-            </label>
-            <label>
-              Password
-              <input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="********"
-                className={getWarningClass("password")}
-                autoComplete="off"
-              />
-            </label>
-            <label>
-              Confirm Password
-              <input
-                type="password"
-                name="confirmPassword"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                placeholder="********"
-                className={getWarningClass("confirmPassword")}
-                autoComplete="off"
-              />
-            </label>
-            <button type="submit">Sign Up</button>
-          </form>
         </div>
       </div>
-    </div>
+    </HeaderLayout>
   );
 };
 
