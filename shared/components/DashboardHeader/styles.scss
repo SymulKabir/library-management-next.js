@@ -46,7 +46,56 @@
       }
     }
     .profile-container {
-      display: none;
+      display: flex;
+      gap: 10px;
+      background-color: red;
+      width: max-content;
+      .action-menu {
+        display: flex;
+        gap: 10px;
+        button {
+          background-color: #fff;
+          height: 100%;
+          aspect-ratio: 1/1;
+          border: none;
+          outline: none;
+          padding: 0px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+        }
+      }
+      .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        .img-container {
+          height: 30px;
+          aspect-ratio: 1/1;
+          overflow: hidden;
+          background-color: #ffffff;
+          border-radius: 50%;
+          img {
+            height: inherit;
+            width: auto;
+          }
+        }
+        .name-container {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          h2 {
+            font-size: 12px;
+            font-weight: 500;
+          }
+          p {
+            font-size: 10px;
+            font-weight: 300;
+            color: #676060;
+          }
+        }
+      }
     }
   }
 }
