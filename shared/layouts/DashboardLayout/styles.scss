@@ -1,0 +1,39 @@
+.dashboard-layout {
+  $gap: 10px;
+  background-color: #ffffff;
+  padding: $gap;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  gap: $gap;
+
+  .dashboard-side-nav,
+  .dashboard-header,
+  .dashboard-content {
+    width: 180px;
+    height: 100%;
+    background-color: #f7f7f7;
+    border-radius: 15px;
+  }
+  .dashboard-side-nav {
+    width: 180px;
+    height: 100vh;
+  }
+  .content-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: $gap;
+
+    .dashboard-header,
+    .dashboard-content {
+      width: 100%;
+    }
+    .dashboard-header {
+      height: 60px;
+    } 
+    .dashboard-content {
+      width: 100%;
+    }
+  }
+}

@@ -1,0 +1,52 @@
+.dashboard-header-section {
+  width: 100%;
+  height: 100%;
+
+  .dashboard-header-section-container {
+    height: inherit;
+    width: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10px;
+
+    .search-box {
+      display: flex;
+      height: 25px;
+      padding: 5px 10px;
+      border-radius: 15px;
+      background-color: #ffffff;
+      align-items: center;
+      gap: 3px;
+      svg {
+        height: 16px;
+      }
+      input,
+      button {
+        background-color: transparent;
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 0px;
+        height: 100%;
+      }
+      button {
+        width: max-content;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #e4e4e4;
+        border-radius: 5px;
+        padding: 0px 5px;
+        color: #676060;
+        font-size: 11px;
+        svg {
+          font-size: 12px;
+        }
+      }
+    }
+    .profile-container {
+      display: none;
+    }
+  }
+}
