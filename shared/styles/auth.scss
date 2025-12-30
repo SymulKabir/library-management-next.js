@@ -5,7 +5,7 @@
   min-height: 100vh;
   width: 100%;
   .form-wrapper {
-    background-color: #FFF;
+    background-color: #fff;
     // background-color: var(--primary-background);
     padding: 2.5rem 2rem;
     margin: 10px 0px;
@@ -67,6 +67,13 @@
         border-radius: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        svg {
+          font-size: 16px;
+        }
         &:hover {
           opacity: 0.8;
         }

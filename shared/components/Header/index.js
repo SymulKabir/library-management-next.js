@@ -8,7 +8,7 @@ import { IoRocket } from "react-icons/io5";
 const Header = () => {
   return (
     <header className="main-header-section">
-      <div className="header-container">
+      <div className="header-container box-shadow">
         <div className="logo">
           <Link href="/">
             <Image src={logo} alt="" height={100} width={100} />
