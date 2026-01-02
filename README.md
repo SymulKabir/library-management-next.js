@@ -37,8 +37,13 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 # library-management-next.js
 
 
-##### Design follow form
+#### Design follow form
 ```link
 https://dribbble.com/search/dashboard
 https://dribbble.com/shots/25241984-Task-Management-Dashboard
+```
+
+#### Sear bar design follow from
+```link
+https://www.wafilife.com/
 ```

@@ -15,7 +15,7 @@ const DashboardHeader = () => {
           <input type="text" placeholder="Search here" />
           <button>
             <MdOutlineKeyboardCommandKey />
-            <bold>F</bold>
+            <strong>F</strong>
           </button>
         </div>
 

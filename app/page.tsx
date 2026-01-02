@@ -1,12 +1,10 @@
 import HeaderLayout from "@/shared/layouts/HeaderLayout";
-import Image from "next/image";
+import HomePage from '@/app/Home/index'
 
 export default function Home() {
   return (
     <HeaderLayout>
-      <div>
-        <h1>hello world</h1>
-      </div>
+      <HomePage/>
     </HeaderLayout>
   );
 }
