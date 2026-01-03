@@ -1,9 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 import React, { useEffect } from "react";
 import "./styles.scss";
 import DashboardLayout from "@/shared/layouts/DashboardLayout/index";
 import { MdAdd } from "react-icons/md";
-import Image from "next/image";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
 import { useRouter } from "next/navigation";
@@ -16,9 +16,8 @@ const Dashboard = () => {
   const [sort, setSort] = React.useState("");
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
+  const [filterItems, setFilterItems] = React.useState({});
 
-  const ImgAdd =
-    "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=1600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2hvZXN8ZW58MHx8MHx8fDA%3D";
 
   const handleUpdateBookNav = () => {
     router.push("/admin/inventory/add");
@@ -37,7 +36,22 @@ const Dashboard = () => {
       console.error("Error fetching books:", error);
     }
   };
+  const fetchFilterItems = async () => {
+    try {
+      const res = await fetch("/api/books/categories", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
+      const { data } = await res.json();
+      setFilterItems(data || []);
+    } catch (error) {
+      console.error("Error fetching books:", error);
+    }
+  };
 
+  useEffect(() => {
+    fetchFilterItems();
+  }, []);
   useEffect(() => {
     fetchBooks();
   }, [category, author, sort, page]);
@@ -50,8 +64,9 @@ const Dashboard = () => {
             <label>Category:</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)}>
               <option value="">All</option>
-              <option value="cat1">Cat 1</option>
-              <option value="cat2">Cat 2</option>
+              {!!filterItems?.categories?.length && filterItems?.categories?.map((category, i) => (
+                <option key={i} value={category}>{category}</option>
+              ))}
             </select>
           </div>
 
@@ -59,8 +74,11 @@ const Dashboard = () => {
             <label>Author:</label>
             <select value={author} onChange={(e) => setAuthor(e.target.value)}>
               <option value="">All</option>
-              <option value="author1">Author 1</option>
-              <option value="author2">Author 2</option>
+              {
+                !!filterItems?.authors?.length && filterItems?.authors?.map((author: string, index: number) => (
+                  <option key={index} value={author}>{author}</option>
+                ))
+              }
             </select>
           </div>
 
@@ -96,16 +114,18 @@ const Dashboard = () => {
 
             <tbody>
               {books.map((book, index) => (
-                <tr key={book.id || index}>
+                <tr key={index}>
                   <td className="img-container">
                     <div>
                       <input type="checkbox" />
                       <div>
-                        <Image src={book.image_url || ImgAdd} alt={book.title} height={100} width={100} />
+                        <img
+                          src={book.image_url}
+                          alt={book.title} />
                       </div>
                     </div>
                   </td>
-                  <td>{book.book_id || `BK-${book.id}`}</td>
+                  <td>{book.id}</td>
                   <td>{book.title}</td>
                   <td>{book.author}</td>
                   <td>{book.stock}</td>
