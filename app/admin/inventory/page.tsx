@@ -3,14 +3,34 @@ import "./styles.scss";
 import DashboardLayout from "@/shared/layouts/DashboardLayout/index";
 import { MdAdd } from "react-icons/md";
 import Image from "next/image";
-
+import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
+import { IoIosArrowDown } from "react-icons/io";
 const Dashboard = () => {
   const items = [
-    { id: 1, idNumber: "BK-001", name: "The Alchemist", author: "Paulo Coelho", stock: 12 },
-    { id: 2, idNumber: "BK-002", name: "Atomic Habits", author: "James Clear", stock: 8 },
-    { id: 3, idNumber: "BK-003", name: "Rich Dad Poor Dad", author: "Robert Kiyosaki", stock: 4 },
+    {
+      id: 1,
+      idNumber: "BK-001",
+      name: "The Alchemist",
+      author: "Paulo Coelho",
+      stock: 12,
+    },
+    {
+      id: 2,
+      idNumber: "BK-002",
+      name: "Atomic Habits",
+      author: "James Clear",
+      stock: 8,
+    },
+    {
+      id: 3,
+      idNumber: "BK-003",
+      name: "Rich Dad Poor Dad",
+      author: "Robert Kiyosaki",
+      stock: 4,
+    },
   ];
-  const ImgAdd = 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=1600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2hvZXN8ZW58MHx8MHx8fDA%3D';
+  const ImgAdd =
+    "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=1600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2hvZXN8ZW58MHx8MHx8fDA%3D";
 
   return (
     <DashboardLayout>
@@ -62,20 +82,25 @@ const Dashboard = () => {
                 <tr key={index}>
                   <td className="img-container">
                     <div>
-                      <input type='checkbox' />
+                      <input type="checkbox" />
                       <div>
                         <Image src={ImgAdd} alt="" height={100} width={100} />
                       </div>
-
                     </div>
                   </td>
                   <td>{item.idNumber}</td>
                   <td>{item.name}</td>
                   <td>{item.author}</td>
                   <td>{item.stock}</td>
-                  <td>
-                    <button>Edit</button>
-                    <button>Delete</button>
+                  <td className="action-container">
+                    <div>
+                      <button>
+                        <IoIosArrowDown />
+                      </button>
+                      <button>
+                        <PiDotsThreeOutlineVerticalDuotone />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
