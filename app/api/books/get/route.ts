@@ -2,7 +2,6 @@ import { db } from "@/shared/lib/db";
 
 export async function POST(request: Request) {
   try {
-    console.log("Fetching books with filters...");
     const body = await request.json();
     const category = body.category || "";
     const author = body.author || "";
@@ -30,8 +29,8 @@ export async function POST(request: Request) {
     if (sort === "desc") query += " ORDER BY created_at DESC";
     if (sort === "bestsale") query += " ORDER BY stock DESC";
 
-    query += " LIMIT ? OFFSET ?";
-    params.push(limit, offset);
+    // Inject limit and offset directly
+    query += ` LIMIT ${limit} OFFSET ${offset}`;
 
     const [rows]: any = await conn.execute(query, params);
 
@@ -39,13 +38,13 @@ export async function POST(request: Request) {
 
     return new Response(JSON.stringify({ data: rows, page }), {
       status: 200,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error(error);
+    console.error("Error in POST /api/books/get:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
       status: 500,
-      headers: { "Content-Type": "application/json" }
+      headers: { "Content-Type": "application/json" },
     });
   }
 }

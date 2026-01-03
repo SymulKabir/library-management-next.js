@@ -26,7 +26,7 @@ const Dashboard = () => {
 
   const fetchBooks = async () => {
     try {
-      const res = await fetch("/api/books/list", {
+      const res = await fetch("/api/books/get", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ category, author, sort, page }),
