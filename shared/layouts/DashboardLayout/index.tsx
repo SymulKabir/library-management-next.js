@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import DashboardSideNav from "@/shared/components/DashboardSideNav/index";
 import DashboardHeader from "@/shared/components/DashboardHeader/index";
-import './styles.scss'
+import "./styles.scss";
 
 type HeaderLayoutProps = {
   children: ReactNode;
@@ -15,9 +15,11 @@ const DashboardLayout = ({ children }: HeaderLayoutProps) => {
       </section>
       <section className="content-container">
         <section className="dashboard-header">
-          <DashboardHeader/>
+          <DashboardHeader />
         </section>
-        <section className="dashboard-content">{children}</section>
+        <section className="dashboard-content">
+          <div className="inner-dashboard-content">{children}</div>
+        </section>
       </section>
     </section>
   );

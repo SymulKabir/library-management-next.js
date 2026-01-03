@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import "./styles.scss";
 import DashboardLayout from "@/shared/layouts/DashboardLayout/index";
@@ -5,7 +6,11 @@ import { MdAdd } from "react-icons/md";
 import Image from "next/image";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
+import { useRouter } from "next/navigation";
+
 const Dashboard = () => {
+  const router = useRouter();
+
   const items = [
     {
       id: 1,
@@ -31,6 +36,9 @@ const Dashboard = () => {
   ];
   const ImgAdd =
     "https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?w=1600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2hvZXN8ZW58MHx8MHx8fDA%3D";
+  const handleUpdateBookNav = () => {
+    router.push("/admin/inventory/add");
+  };
 
   return (
     <DashboardLayout>
@@ -58,7 +66,7 @@ const Dashboard = () => {
           </div>
 
           <div className="button">
-            <button>
+            <button onClick={handleUpdateBookNav}>
               Add items <MdAdd />
             </button>
           </div>
