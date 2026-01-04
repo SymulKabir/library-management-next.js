@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import 'sass'
-import { ToastContainer } from 'react-toastify';
+import "sass";
+import { ToastContainer } from "react-toastify";
+import StoreProvider from "./StoreProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,11 +26,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>
-        {children}
-        <ToastContainer />
-      </body>
-    </html>
+    <StoreProvider>
+      <html lang="en">
+        <body>
+          {children}
+          <ToastContainer />
+        </body>
+      </html>
+    </StoreProvider>
   );
 }

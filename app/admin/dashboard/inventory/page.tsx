@@ -1,26 +1,29 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./styles.scss";
 import DashboardLayout from "@/shared/layouts/DashboardLayout/index";
 import { MdAdd } from "react-icons/md";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
 import { useRouter } from "next/navigation";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const router = useRouter();
-  const [books, setBooks] = React.useState<any[]>([]);
-  const [category, setCategory] = React.useState("");
-  const [author, setAuthor] = React.useState("");
-  const [sort, setSort] = React.useState("");
-  const [page, setPage] = React.useState(1);
-  const [totalPages, setTotalPages] = React.useState(1);
-  const [filterItems, setFilterItems] = React.useState({});
+  const [books, setBooks] = useState<any[]>([]);
+  const [category, setCategory] = useState("");
+  const [author, setAuthor] = useState("");
+  const [sort, setSort] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [filterItems, setFilterItems] = useState({});
+  const state = useSelector((state: any) => state);
 
+  console.log("Redux State:", state);
 
   const handleUpdateBookNav = () => {
-    router.push("/admin/inventory/add");
+    router.push("/dashboard/admin/inventory/add");
   };
 
   const fetchBooks = async () => {
@@ -62,11 +65,17 @@ const Dashboard = () => {
         <section className="inventory-filter-section">
           <div className="select">
             <label>Category:</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
               <option value="">All</option>
-              {!!filterItems?.categories?.length && filterItems?.categories?.map((category, i) => (
-                <option key={i} value={category}>{category}</option>
-              ))}
+              {!!filterItems?.categories?.length &&
+                filterItems?.categories?.map((category, i) => (
+                  <option key={i} value={category}>
+                    {category}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -74,11 +83,12 @@ const Dashboard = () => {
             <label>Author:</label>
             <select value={author} onChange={(e) => setAuthor(e.target.value)}>
               <option value="">All</option>
-              {
-                !!filterItems?.authors?.length && filterItems?.authors?.map((author: string, index: number) => (
-                  <option key={index} value={author}>{author}</option>
-                ))
-              }
+              {!!filterItems?.authors?.length &&
+                filterItems?.authors?.map((author: string, index: number) => (
+                  <option key={index} value={author}>
+                    {author}
+                  </option>
+                ))}
             </select>
           </div>
 
@@ -119,9 +129,7 @@ const Dashboard = () => {
                     <div>
                       <input type="checkbox" />
                       <div>
-                        <img
-                          src={book.image_url}
-                          alt={book.title} />
+                        <img src={book.image_url} alt={book.title} />
                       </div>
                     </div>
                   </td>

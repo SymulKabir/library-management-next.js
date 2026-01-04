@@ -3,21 +3,22 @@ import Link from "next/link";
 import "./styles.scss";
 import Image from "next/image";
 import logo from "@/public/logo.png";
-import { IoRocket } from "react-icons/io5";
 import { BiSolidDashboard } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";
+import { LuClipboardList } from "react-icons/lu";
+
 
 const DASHBOARD_MENUS = [
   {
     label: "Dashboard",
     svg: <BiSolidDashboard />,
-    route: "/dashboard",
+    route: "/admin/dashboard",
     className: "active",
   },
   {
-    label: "Dashboard",
-    svg: <BiSolidDashboard />,
-    route: "/dashboard",
+    label: "Inventory",
+    svg: <LuClipboardList />,
+    route: "/admin/dashboard/inventory",
   },
   {
     label: "Dashboard",
