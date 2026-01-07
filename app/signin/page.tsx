@@ -38,7 +38,7 @@ const Signin = () => {
     if (!validateForm()) return;
 
     const apiCall = async () => {
-      const response = await fetch("/api/users/signin", {
+      const response = await fetch("/api/students/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

@@ -5,11 +5,16 @@ import { promiseToast, warningToast } from "@/shared/utils/toast";
 import Link from "next/link";
 import HeaderLayout from "@/shared/layouts/HeaderLayout";
 import { IoRocket } from "react-icons/io5";
+import { useRouter } from "next/navigation";
 
 const Signup = () => {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
+    department: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
@@ -23,76 +28,90 @@ const Signup = () => {
   };
 
   const validateForm = () => {
+    const phoneRegex = /^(?:\+?88)?01[3-9]\d{8}$/
     const keys = Object.keys(form);
     const newWarnings: any = {};
     keys.forEach((key) => {
       if (!form[key as keyof typeof form]) {
         newWarnings[key] = true;
       }
+
     });
-    setWarnings(newWarnings);
     console.log("Warnings:", newWarnings);
     if (Object.keys(newWarnings).length > 0) {
       warningToast("Fill the form, then try again!");
     } else if (
+      phoneRegex.test(form["phone" as keyof typeof form]) === false
+    ) {
+      newWarnings["phone"] = true;
+      warningToast("Phone number does not valid!");
+    } else if (
       Object.keys(newWarnings).length == 0 &&
       form.password !== form.confirmPassword
     ) {
+      newWarnings["confirmPassword"] = true;
       warningToast("Passwords does not match!");
-      return false;
     }
+    setWarnings(newWarnings);
 
     return Object.keys(newWarnings).length === 0;
+  };
+  const apiCall = async () => {
+    try {
+      setProcessing((state) => {
+        return {
+          ...state,
+          signup: true,
+        };
+      });
+      const response = await fetch("/api/students", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const { data, message } = await response.json();
+      console.log("Hello from signup:", { data, message });
+      if (!data) {
+        throw new Error(message || "Signup failed");
+      }
+      return data;
+    } catch (error) {
+      throw new Error(error.message || "Signup failed")
+    } finally {
+      setProcessing((state) => {
+        return {
+          ...state,
+          signup: false,
+        };
+      });
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (processing.signup) {
-      return;
-    }
+    if (processing.signup) return;
     if (!validateForm()) return;
-
-    const apiCall = async () => {
-      try {
-        setProcessing((state) => {
-          return {
-            ...state,
-            signup: true,
-          };
-        });
-        const response = await fetch("/api/users", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
-        });
-        const { data, message } = await response.json();
-
-        if (!data) {
-          throw new Error(message || "Signup failed");
-        }
-        return data;
-      } catch (error) {
-      } finally {
-        setProcessing((state) => {
-          return {
-            ...state,
-            signup: false,
-          };
-        });
-      }
-    };
 
     try {
       const result = await promiseToast(apiCall(), {
         pending: "Signing up...",
-        success: "Signup successful!",
-        error: "Signup failed. Please try again.",
+        success: {
+          render: ({ data }: { data: any }) => {
+            router.push("/");
+            return `Signup successful!`;
+          }
+        },
+        error: {
+          render: ({ data }: { data: { message: string } }) => `${data.message}`
+        }
       });
-      console.log("API Result:", result);
+ 
     } catch (err) {
       console.error("Signup error:", err);
     }
   };
+
 
   const getWarningClass = (field: string) => {
     return warnings[field] ? "warning" : "";
@@ -128,6 +147,31 @@ const Signup = () => {
                   onChange={handleChange}
                   placeholder="john@example.com"
                   className={getWarningClass("email")}
+                  autoComplete="off"
+                />
+              </label>
+
+              <label>
+                Phone
+                <input
+                  type="text"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  placeholder="0123456789"
+                  className={getWarningClass("phone")}
+                  autoComplete="off"
+                />
+              </label>
+              <label>
+                Department
+                <input
+                  type="text"
+                  name="department"
+                  value={form.department}
+                  onChange={handleChange}
+                  placeholder="Business"
+                  className={getWarningClass("department")}
                   autoComplete="off"
                 />
               </label>

@@ -23,7 +23,7 @@ const Dashboard = () => {
   console.log("Redux State:", state);
 
   const handleUpdateBookNav = () => {
-    router.push("/dashboard/admin/inventory/add");
+    router.push("/admin/dashboard/inventory/add");
   };
 
   const fetchBooks = async () => {

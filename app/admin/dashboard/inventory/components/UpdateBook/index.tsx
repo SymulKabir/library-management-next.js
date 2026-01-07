@@ -4,21 +4,32 @@ import "./styles.scss";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
 import { promiseToast, warningToast } from "@/shared/utils/toast";
+import { useRouter } from "next/navigation";
+
 
 const UpdateBook = () => {
+  const [progressing, setProcessing] = useState({
+    addBook: false,
+  });
   const [form, setForm] = useState({
     title: "",
     author: "",
-    isbn: "",
     category: "",
+    availability: true,
     image_url: "",
     stock: "",
   });
-
   const [warnings, setWarnings] = useState<Record<string, boolean>>({});
+const router = useRouter();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
+    if (name === "availability") {
+      setForm({ ...form, [name]: value === "true" ? true : false });
+      return;
+    }
 
     if (name === "stock") {
       if (/^\d*$/.test(value)) {
@@ -30,22 +41,26 @@ const UpdateBook = () => {
     setForm({ ...form, [name]: value });
   };
 
+  console.log("Form State:", form);
   const validateForm = () => {
-    const keys = Object.keys(form);
-    const newWarnings: any = {};
-    keys.forEach((key) => {
-      if (!form[key as keyof typeof form]) newWarnings[key] = true;
+    const newWarnings: Record<string, boolean> = {};
+
+    Object.entries(form).forEach(([key, value]) => {
+      if (value === "" || value === null || value === undefined) {
+        newWarnings[key] = true;
+      }
     });
+
     setWarnings(newWarnings);
     if (Object.keys(newWarnings).length > 0) warningToast("Fill all fields, then try again!");
     return Object.keys(newWarnings).length === 0;
   };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    const apiCall = async () => {
+  const apiCall = async () => {
+    setProcessing((state) => ({
+      ...state,
+      addBook: true,
+    }));
+    try {
       const response = await fetch("/api/books/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -54,13 +69,35 @@ const UpdateBook = () => {
       const { data, message } = await response.json();
       if (!data) throw new Error(message || "Book add failed");
       return data;
-    };
+    } catch (error) {
+      throw new Error(error.message || "Book add failed")
+    } finally {
+      setProcessing((state) => ({
+        ...state,
+        addBook: false,
+      }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (progressing.addBook) {
+      return
+    }
+    if (!validateForm()) return;
 
     try {
       const result = await promiseToast(apiCall(), {
         pending: "Adding book...",
-        success: "Book added successfully!",
-        error: "Failed to add book!",
+        success: {
+          render: ({ data }: { data: any }) => {
+            router.push("/admin/dashboard/inventory");
+            return `Book added successfully!`;
+          }
+        },
+        error: {
+          render: ({ data }: { data: { message: string } }) => `${data.message}`
+        }
       });
       console.log("API Result:", result);
     } catch (err) {
@@ -105,17 +142,7 @@ const UpdateBook = () => {
               />
             </label>
 
-            <label>
-              ISBN Number
-              <input
-                type="text"
-                name="isbn"
-                value={form.isbn}
-                onChange={handleChange}
-                placeholder="978-1612680194"
-                className={getWarningClass("isbn")}
-              />
-            </label>
+
 
             <label>
               Category
@@ -128,7 +155,18 @@ const UpdateBook = () => {
                 className={getWarningClass("category")}
               />
             </label>
-
+            <label>
+              Availability
+              <select
+                name="availability"
+                value={form.availability ? "true" : "false"}
+                onChange={handleChange}
+                className={getWarningClass("availability")}
+              >
+                <option value="true">Available</option>
+                <option value="false">Not Available</option>
+              </select>
+            </label>
             <label>
               Book Image
               <input
@@ -159,7 +197,7 @@ const UpdateBook = () => {
 
             <div className="nav">
               <p>Want to see all books?</p>
-              <Link href={"/admin/inventory"}>Book List</Link>
+              <Link href={"/admin/dashboard/inventory"}>Book List</Link>
             </div>
           </form>
         </div>

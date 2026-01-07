@@ -8,23 +8,23 @@ export async function POST(request: Request) {
     const { email, password } = body;
 
     if (!email || !password) {
-      return new Response(JSON.stringify({ message: "Email and password are required." }), { status: 400 });
+      return new Response(JSON.stringify({ message: "Email and password are required!" }), { status: 400 });
     }
 
     const conn = await db();
-    const [users] = await conn.execute("SELECT id, name, email, password, created_at FROM users WHERE email = ?", [email]);
+    const [students] = await conn.execute("SELECT student_id, name, email, password, created_at FROM students WHERE email = ?", [email]);
     await conn.end();
 
-    const user = (users as any[])[0];
+    const user = (students as any[])[0];
 
     if (!user) {
-      return new Response(JSON.stringify({ message: "Invalid email or password." }), { status: 401 });
+      return new Response(JSON.stringify({ message: "Invalid email or password!" }), { status: 401 });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return new Response(JSON.stringify({ message: "Invalid email or password." }), { status: 401 });
+      return new Response(JSON.stringify({ message: "Invalid email or password!" }), { status: 401 });
     }
 
     // Return user data excluding password
