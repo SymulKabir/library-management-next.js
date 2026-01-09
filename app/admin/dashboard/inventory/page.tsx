@@ -8,6 +8,7 @@ import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
+import ActionBookMenu from './components/ActionBookMenu/index';
 
 const Dashboard = () => {
   const router = useRouter();
@@ -58,6 +59,21 @@ const Dashboard = () => {
   useEffect(() => {
     fetchBooks();
   }, [category, author, sort, page]);
+  
+  
+  const formatDate = (iso: string): string => {
+  const date = new Date(iso);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = date.getFullYear();
+  let hours = date.getHours();
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+  return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
+};
+
+
 
   return (
     <DashboardLayout>
@@ -118,6 +134,7 @@ const Dashboard = () => {
                 <th>Name</th>
                 <th>Author</th>
                 <th>Stock</th>
+                <th>Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -133,10 +150,11 @@ const Dashboard = () => {
                       </div>
                     </div>
                   </td>
-                  <td>{book.id}</td>
+                  <td>{book.book_id}</td>
                   <td>{book.title}</td>
                   <td>{book.author}</td>
                   <td>{book.stock}</td>
+                  <td>{formatDate(book.created_at)}</td>
                   <td className="action-container">
                     <div>
                       <button>
@@ -144,6 +162,7 @@ const Dashboard = () => {
                       </button>
                       <button>
                         <PiDotsThreeOutlineVerticalDuotone />
+                        <ActionBookMenu book_id={book.book_id} />
                       </button>
                     </div>
                   </td>

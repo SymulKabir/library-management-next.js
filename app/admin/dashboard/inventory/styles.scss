@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-items: center;
 
-    & > div {
+    &>div {
       display: flex;
       align-items: center;
       gap: 3px;
@@ -83,7 +83,7 @@
         color: var(--primary-text-color);
 
         &.img-container {
-          & > div {
+          &>div {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -98,12 +98,14 @@
             }
           }
         }
+
         &.action-container {
-          & > div {
+          &>div {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
+
             button {
               border: none;
               outline: none;
@@ -111,9 +113,21 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              svg{
+              position: relative;
+
+              svg {
                 font-size: 14px;
                 color: var(--primary-text-color);
+              }
+
+              .action-book-menu {
+                display: none;
+              }
+
+              &:hover {
+                .action-book-menu {
+                  display: flex;
+                }
               }
             }
           }

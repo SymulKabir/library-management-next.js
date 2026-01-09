@@ -1,8 +1,9 @@
 import React from "react";
 import DashboardLayout from "@/shared/layouts/DashboardLayout/index";
-import UpdateBook from "../components/UpdateBook";
+import UpdateBook from "../../components/UpdateBook";
 
-const EditBook = () => {
+
+const AddBook = () => {
   return (
     <DashboardLayout>
       <UpdateBook />
@@ -10,4 +11,4 @@ const EditBook = () => {
   );
 };
 
-export default EditBook;
+export default AddBook;

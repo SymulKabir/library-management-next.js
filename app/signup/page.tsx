@@ -37,7 +37,6 @@ const Signup = () => {
       }
 
     });
-    console.log("Warnings:", newWarnings);
     if (Object.keys(newWarnings).length > 0) {
       warningToast("Fill the form, then try again!");
     } else if (

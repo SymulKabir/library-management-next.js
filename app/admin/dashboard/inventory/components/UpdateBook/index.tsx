@@ -1,10 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles.scss";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa";
 import { promiseToast, warningToast } from "@/shared/utils/toast";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 
 const UpdateBook = () => {
@@ -20,8 +20,28 @@ const UpdateBook = () => {
     stock: "",
   });
   const [warnings, setWarnings] = useState<Record<string, boolean>>({});
-const router = useRouter();
+  const router = useRouter();
+  const { book_id } = useParams()
+  console.log("Route Params:", book_id);
 
+useEffect(() => {
+  if (!book_id) return;
+  fetchBookDetails();
+}, [book_id]);
+
+  const fetchBookDetails = async () => {
+    try {
+      const res = await fetch(`/api/books/get/${book_id}`, {
+        method: "GET",
+      });
+      const { data } = await res.json();
+      if (data) {
+        setForm({ ...data });
+      }
+    } catch (error) {
+      console.error("Error fetching book details:", error);
+    }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -60,9 +80,11 @@ const router = useRouter();
       ...state,
       addBook: true,
     }));
+    const EndPoint = book_id ? "/api/books/update" : "/api/books/add";
+    const Method = book_id ? "PUT" : "POST";
     try {
-      const response = await fetch("/api/books/add", {
-        method: "POST",
+      const response = await fetch(EndPoint, {
+        method: Method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
@@ -114,7 +136,7 @@ const router = useRouter();
       <div className="auth-page">
         <div className="form-wrapper">
           <div className="form-header">
-            <h2>Add New Book</h2>
+            <h2>{`${book_id ? "Edit" : "Add New"} Book`}</h2>
           </div>
 
           <form onSubmit={handleSubmit} autoComplete="off">
