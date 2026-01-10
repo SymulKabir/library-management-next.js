@@ -1,45 +1,43 @@
 'use client';
-import React, {useState} from "react";
-import ProductCart from '../ProductCart/ProductCart'
+import React, { useEffect, useState } from "react";
+import './styles.scss'
+import BookCard from '../BookCard/index'
 
 const Index = () => {
-    const [products, setProducts] = useState([
-        {
-        _id: "1",
-        title: "Product 1",
-        auther: "Author 1",
-        src: 'https://rokbucket.rokomari.io/ProductNew20190903/130X186/Priyo_Olkanonda_Phool-Farhana_Nijhum-1d75b-446557.jpg'
-        },
-        {
-        _id: "1",
-        title: "Product 1",
-        auther: "Author 1",
-
-        },
-        {
-        _id: "1",
-        title: "Product 1",
-        auther: "Author 1",
-
-        },
-        {
-        _id: "1",
-        title: "Product 1",
-        auther: "Author 1",
-
-        },
-    ]);
+    const [books, setBooks] = useState([]);
+    const [page, setPage] = useState(1);
 
 
-    return <section className="my-5 product-collection">
-        <div className="product-section-title">
-            <span className="custom-icon" /> <h3>Products</h3>
-        </div>
-        <div className="inner-product-collection light-shadow">
-            { products?.length > 0 &&
-                products.map((product, index) => {
-                    return <ProductCart product={product} key={index} />;
-                })}
+
+    useEffect(() => {
+        fetchBooks();
+    }, [])
+    const fetchBooks = async () => {
+        try {
+            const res = await fetch("/api/books/get", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ page, limit: 10 }),
+            });
+            const { data } = await res.json();
+            setBooks(data || []);
+        } catch (error) {
+            console.error("Error fetching books:", error);
+        }
+    };
+
+
+
+    return <section className="container ">
+        <div className="book-grid-section">
+            <div className="book-grid-title"><h3>Books</h3>
+            </div>
+            <div className="book-grid-container">
+                {books?.length > 0 &&
+                    books.map((book, index) => {
+                        return <BookCard book={book} key={index} />;
+                    })}
+            </div>
         </div>
     </section>
 }

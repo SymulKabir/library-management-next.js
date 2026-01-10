@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import "./styles.scss";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaEdit } from "react-icons/fa";
 import { promiseToast, warningToast } from "@/shared/utils/toast";
 import { useParams, useRouter } from "next/navigation";
 
@@ -10,6 +10,7 @@ import { useParams, useRouter } from "next/navigation";
 const UpdateBook = () => {
   const [progressing, setProcessing] = useState({
     addBook: false,
+    loadEditData: false,
   });
   const [form, setForm] = useState({
     title: "",
@@ -24,12 +25,17 @@ const UpdateBook = () => {
   const { book_id } = useParams()
   console.log("Route Params:", book_id);
 
-useEffect(() => {
-  if (!book_id) return;
-  fetchBookDetails();
-}, [book_id]);
+  useEffect(() => {
+    if (!book_id) return;
+    fetchBookDetails();
+  }, [book_id]);
 
   const fetchBookDetails = async () => {
+    if (progressing.loadEditData) return;
+    setProcessing((state) => ({
+      ...state,
+      loadEditData: true,
+    }));
     try {
       const res = await fetch(`/api/books/get/${book_id}`, {
         method: "GET",
@@ -40,6 +46,11 @@ useEffect(() => {
       }
     } catch (error) {
       console.error("Error fetching book details:", error);
+    } finally {
+      setProcessing((state) => ({
+        ...state,
+        loadEditData: false,
+      }));
     }
   };
 
@@ -76,6 +87,8 @@ useEffect(() => {
     return Object.keys(newWarnings).length === 0;
   };
   const apiCall = async () => {
+    const failedMessage = book_id ? "Book update failed" : "Book add failed";
+
     setProcessing((state) => ({
       ...state,
       addBook: true,
@@ -89,10 +102,10 @@ useEffect(() => {
         body: JSON.stringify(form),
       });
       const { data, message } = await response.json();
-      if (!data) throw new Error(message || "Book add failed");
+      if (!data) throw new Error(message || failedMessage);
       return data;
     } catch (error) {
-      throw new Error(error.message || "Book add failed")
+      throw new Error(error.message || failedMessage)
     } finally {
       setProcessing((state) => ({
         ...state,
@@ -114,7 +127,7 @@ useEffect(() => {
         success: {
           render: ({ data }: { data: any }) => {
             router.push("/admin/dashboard/inventory");
-            return `Book added successfully!`;
+            return `Book ${book_id ? "update" : "added"} successfully!`;
           }
         },
         error: {
@@ -130,6 +143,18 @@ useEffect(() => {
   const getWarningClass = (field: string) => {
     return warnings[field] ? "warning" : "";
   };
+
+  if (book_id && progressing.loadEditData) {
+    return <div className="update-book-container">
+      <div className="auth-page">
+        <div className="form-wrapper">
+          <div className="form-header">
+            <h2>Loading Book Data...</h2>
+          </div>
+        </div>
+      </div>
+    </div>;
+  }
 
   return (
     <div className="update-book-container">
@@ -213,9 +238,12 @@ useEffect(() => {
               />
             </label>
 
-            <button type="submit">
+            {!book_id && <button type="submit">
               <FaPlus /> Add Book
-            </button>
+            </button>}
+            {book_id && <button type="submit">
+              <FaEdit /> Update Book
+            </button>}
 
             <div className="nav">
               <p>Want to see all books?</p>

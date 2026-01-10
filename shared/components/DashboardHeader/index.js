@@ -1,17 +1,26 @@
+'use client';
 import React from "react";
 import "./styles.scss";
-import Image from "next/image";
 import { MdOutlineKeyboardCommandKey } from "react-icons/md";
 import { CiBellOn } from "react-icons/ci";
 import { CiMail } from "react-icons/ci";
 import { BsSearch } from "react-icons/bs";
+import ProfileInfo from "@/shared/components/ProfileInfo";
+import useStudent from "@/shared/hooks/useStudent";
+
 
 const DashboardHeader = () => {
+  const studentState = useStudent()
+  const student  = studentState.data
+
+  
+
+  console.log("student ------>>", student)
   return (
     <header className="dashboard-header-section">
       <div className="dashboard-header-section-container box-shadow">
         <div className="search-box">
-          <BsSearch/>
+          <BsSearch />
           <input type="text" placeholder="Search here" />
           <button>
             <MdOutlineKeyboardCommandKey />
@@ -28,16 +37,7 @@ const DashboardHeader = () => {
               <CiBellOn />
             </button>
           </div>
-
-          <div className="header-actions">
-            <div className="img-container">
-              <Image src={"/assets/man.png"} height={100} width={100} alt="" />
-            </div>
-            <div className="name-container">
-              <h2>Symul Kabir</h2>
-              <p>saimonpratna@gmail.com</p>
-            </div>
-          </div>
+          <ProfileInfo />
         </div>
       </div>
     </header>

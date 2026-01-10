@@ -1,11 +1,18 @@
+'use client';
 import React from "react";
 import Link from "next/link";
 import "./styles.scss";
 import Image from "next/image";
 import logo from "@/public/logo.png";
+import ProfileInfo from "../ProfileInfo";
 import { IoRocket } from "react-icons/io5";
+import useStudent from "@/shared/hooks/useStudent";
+
 
 const Header = () => {
+  const studentState = useStudent();
+  const student = studentState?.data || {};
+
   return (
     <header className="main-header-section">
       <div className="header-container box-shadow">
@@ -33,14 +40,18 @@ const Header = () => {
             </ul>
           </nav>
 
-          <div className="header-actions">
+          {!student?.email && <div className="header-actions">
             <Link href="/signup" className="register-btn">
               <IoRocket /> Register
             </Link>
-          </div>
+          </div>}
+          {
+            student?.email && <ProfileInfo />
+          }
+
         </div>
       </div>
-    </header>
+    </header >
   );
 };
 

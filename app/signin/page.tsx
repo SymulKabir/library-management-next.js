@@ -5,6 +5,9 @@ import Link from "next/link";
 import HeaderLayout from "@/shared/layouts/HeaderLayout";
 import { FaSignInAlt } from "react-icons/fa";
 import { promiseToast, warningToast } from "@/shared/utils/toast";
+import { setToken } from "@/shared/utils/cookies";
+import { setStudent, updateStudentProgress } from "@/shared/store/student/reducer";
+import { useSelector, useDispatch } from "react-redux";
 const Signin = () => {
   const [form, setForm] = useState({
     email: "",
@@ -12,7 +15,10 @@ const Signin = () => {
   });
 
   const [warnings, setWarnings] = useState<Record<string, boolean>>({});
+  const state = useSelector((state) => state);
+  const dispatch = useDispatch()
 
+  console.log("State:", state);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -28,7 +34,7 @@ const Signin = () => {
     console.log("Warnings:", newWarnings);
     if (Object.keys(newWarnings).length > 0) {
       warningToast("Fill the form, then try again!");
-    }  
+    }
 
     return Object.keys(newWarnings).length === 0;
   };
@@ -38,17 +44,31 @@ const Signin = () => {
     if (!validateForm()) return;
 
     const apiCall = async () => {
-      const response = await fetch("/api/students/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const { data, message } = await response.json();
+      dispatch(updateStudentProgress(true));
 
-      if (!data) {
-        throw new Error(message || "Signin failed");
+      try {
+        const response = await fetch("/api/students/signin", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        const { data, token, message } = await response.json();
+
+        if (!data) {
+          throw new Error(message || "Signin failed");
+        }
+        if (token) {
+          setToken(token);
+        }
+        console.log("data ==>>", data);
+        dispatch(setStudent(data));
+
+        return data;
+      } catch (error) {
+        throw new Error(error.message || "Signin failed");
+      } finally {
+        dispatch(updateStudentProgress(false));
       }
-      return data;
     };
 
     try {

@@ -162,7 +162,7 @@ const Dashboard = () => {
                       </button>
                       <button>
                         <PiDotsThreeOutlineVerticalDuotone />
-                        <ActionBookMenu book_id={book.book_id} />
+                        <ActionBookMenu book_id={book.book_id} setBooks={setBooks} />
                       </button>
                     </div>
                   </td>

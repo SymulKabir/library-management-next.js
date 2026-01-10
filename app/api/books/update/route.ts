@@ -25,16 +25,21 @@ export async function PUT(
       [title, author, category, availability ?? false, image_url, stock, book_id]
     );
 
-    await conn.end();
 
     if (result.affectedRows === 0) {
+      await conn.end();
+
       return new Response(JSON.stringify({ message: "Book not found." }), {
         status: 404,
         headers: { "Content-Type": "application/json" }
       });
     }
+    const [data]: any = await conn.execute(`
+      SELECT * FROM books WHERE book_id = ?`, [book_id]);
+    await conn.end();
+ 
 
-    return new Response(JSON.stringify({ message: "Book updated successfully." }), {
+    return new Response(JSON.stringify({ message: "Book updated successfully.", data: data[0]}), {
       status: 200,
       headers: { "Content-Type": "application/json" }
     });

@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs';
 import { db } from "@/shared/lib/db";
+import {generateToken} from '@/shared/utils/token';
 
 
 export async function POST(request: Request) {
@@ -26,11 +27,12 @@ export async function POST(request: Request) {
     if (!isPasswordValid) {
       return new Response(JSON.stringify({ message: "Invalid email or password!" }), { status: 401 });
     }
-
+    console.log("user ->", user);
     // Return user data excluding password
-    const { password: _pwd, ...userData } = user;
-
-    return new Response(JSON.stringify({ data: userData }), {
+    const { password: _, ...userData } = user;
+    
+     const token = generateToken({student_id: user.student_id, email: user.email});
+    return new Response(JSON.stringify({ data: userData, token }), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
@@ -44,4 +46,3 @@ export async function POST(request: Request) {
 }
 
 
- 

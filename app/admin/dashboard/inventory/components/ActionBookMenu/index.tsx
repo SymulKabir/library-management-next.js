@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import './styles.scss'
 import { promiseToast } from '@/shared/utils/toast';
 
-const ActionBookMenu = ({ book_id }: { book_id: string }) => {
+const ActionBookMenu = ({ book_id, setBooks }: { book_id: string, setBooks: (fn: any) => void }) => {
     const [processing, setProcessing] = useState<{ delete: boolean }>({ delete: false });
     const router = useRouter()
 
@@ -25,11 +25,12 @@ const ActionBookMenu = ({ book_id }: { book_id: string }) => {
                 body: JSON.stringify({ book_id }),
             });
 
-            const { data, message } = await response.json();
-            if (!data) {
+            const { success, message } = await response.json();
+            if (!success) {
                 throw new Error(message || `Failed to delete book`);
             }
-            return data;
+            setBooks((books: any[]) => books.filter(book => book.book_id !== book_id));
+            return null;
         } catch (error) {
             throw new Error(error.message || "Signup failed")
         } finally {
