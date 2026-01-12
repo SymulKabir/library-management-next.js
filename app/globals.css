@@ -1,4 +1,5 @@
 @import url('../shared/styles/global.scss');
+@import url('../shared/styles/style-controls.scss');
 
 :root {
   /* --background: #ffffff; */

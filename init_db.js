@@ -87,7 +87,7 @@ const initIssueRecordsDB = async () => {
         book_id VARCHAR(100) NOT NULL,
         issue_date DATE NOT NULL,
         return_date DATE,
-        status VARCHAR(50) NOT NULL DEFAULT 'issued',
+        status ENUM('Pending', 'Issued', 'Rejected', 'Returned') NOT NULL DEFAULT 'Pending',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -104,9 +104,9 @@ const initIssueRecordsDB = async () => {
 
 
 const init = async () => {
-  await initStudentDB();
-  await initBooksDB();
-  await initAdminsDB();
+  // await initStudentDB();
+  // await initBooksDB();
+  // await initAdminsDB();
   await initIssueRecordsDB();
 };
 

@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import Link from "next/link";
 import "./styles.scss";
@@ -6,14 +7,14 @@ import logo from "@/public/logo.png";
 import { BiSolidDashboard } from "react-icons/bi";
 import { MdOutlineLogout } from "react-icons/md";
 import { LuClipboardList } from "react-icons/lu";
-
+import { usePathname } from 'next/navigation'
+import { LuNotebookPen } from "react-icons/lu";
 
 const DASHBOARD_MENUS = [
   {
     label: "Dashboard",
     svg: <BiSolidDashboard />,
-    route: "/admin/dashboard",
-    className: "active",
+    route: "/admin/dashboard", 
   },
   {
     label: "Inventory",
@@ -21,24 +22,9 @@ const DASHBOARD_MENUS = [
     route: "/admin/dashboard/inventory",
   },
   {
-    label: "Dashboard",
-    svg: <BiSolidDashboard />,
-    route: "/dashboard",
-  },
-  {
-    label: "Dashboard",
-    svg: <BiSolidDashboard />,
-    route: "/dashboard",
-  },
-  {
-    label: "Dashboard",
-    svg: <BiSolidDashboard />,
-    route: "/dashboard",
-  },
-  {
-    label: "Dashboard",
-    svg: <BiSolidDashboard />,
-    route: "/dashboard",
+    label: "Book Issuer",
+    svg: <LuNotebookPen />,
+    route: "/admin/dashboard/book-issuer",
   },
 ];
 const GENERAL_MENUS = [
@@ -48,7 +34,16 @@ const GENERAL_MENUS = [
   },
 ];
 
+
 const DashboardSideNav = () => {
+const pathname = usePathname()
+
+const getActiveClass = (route) => {
+  return pathname === route ? 'active' : ''
+} 
+
+
+
   return (
     <header className="dashboard-side-nav-section">
       <div className="dashboard-side-nav-section-container">
@@ -62,7 +57,7 @@ const DashboardSideNav = () => {
           <nav className="nav-menu">
             <ul>
               {DASHBOARD_MENUS.map(
-                ({ label, svg, route, className }, index) => {
+                ({ label, svg, route }, index) => {
                   return (
                     <li key={index}>
                       {!route && (
@@ -71,7 +66,7 @@ const DashboardSideNav = () => {
                         </button>
                       )}
                       {route && (
-                        <Link href={route} className={className}>
+                        <Link href={route} className={`${getActiveClass(route)}`}>
                           {svg} {label}
                         </Link>
                       )}

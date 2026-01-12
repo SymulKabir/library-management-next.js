@@ -78,7 +78,7 @@ const Dashboard = () => {
   return (
     <DashboardLayout>
       <div className="admin-inventory">
-        <section className="inventory-filter-section">
+        <section className="filter-controls">
           <div className="select">
             <label>Category:</label>
             <select
@@ -125,7 +125,7 @@ const Dashboard = () => {
           </div>
         </section>
 
-        <section className="inventory-table">
+        <section className="table-controls">
           <table>
             <thead>
               <tr>
