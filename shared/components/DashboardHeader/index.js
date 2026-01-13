@@ -14,8 +14,7 @@ const DashboardHeader = () => {
   const student  = studentState.data
 
   
-
-  console.log("student ------>>", student)
+ 
   return (
     <header className="dashboard-header-section">
       <div className="dashboard-header-section-container box-shadow">
@@ -37,7 +36,7 @@ const DashboardHeader = () => {
               <CiBellOn />
             </button>
           </div>
-          <ProfileInfo />
+          <ProfileInfo user={student} />
         </div>
       </div>
     </header>

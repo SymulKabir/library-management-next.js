@@ -5,7 +5,6 @@ import "./styles.scss";
 import DashboardLayout from "@/shared/layouts/DashboardLayout/index";
 import { IoIosArrowDown } from "react-icons/io";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
-import { useRouter } from "next/navigation";
 import IssueRecordActionMenu from "./components/IssueRecordActionMenu/index";
 import { LuSettings2 } from "react-icons/lu";
 const statuses = ["Pending", "Issued", "Rejected", "Returned"];
@@ -13,16 +12,14 @@ const statuses = ["Pending", "Issued", "Rejected", "Returned"];
 const BookIssuer = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
   const [filterInputs, setFilterInputs] = useState({});
-  const sort = "";
-  const category = "";
-  const author = "";
-  const router = useRouter();
 
   const fetchIssueRecords = async () => {
     try {
+
       const res = await fetch("/api/issue-records/get", {
-        method: "GET",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(filterInputs),
       });
 
       const { data } = await res.json();
@@ -64,12 +61,21 @@ const BookIssuer = () => {
           <h2>Book Issue Records</h2>
         </section>
         <section className="filter-controls">
+          <div className="search">
+            <input
+              type="input"
+              placeholder="search by book"
+              name="search"
+              value={getFilteredData("search")}
+              onChange={changeFIlter}
+            />
+          </div>
           <div className="select">
             <label>Status:</label>
             <select
               name="status"
               value={getFilteredData("status")}
-              onChange={(e) => changeFIlter(e)}
+              onChange={changeFIlter}
             >
               <option value="">All</option>
               {!!statuses?.length &&
@@ -85,7 +91,7 @@ const BookIssuer = () => {
             <select
               name="sort"
               value={getFilteredData("sort")}
-              onChange={(e) => changeFIlter(e)}
+              onChange={changeFIlter}
             >
               <option value="asc">Oldest</option>
               <option value="desc">Newest</option>

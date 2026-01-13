@@ -1,5 +1,5 @@
-'use client';
-import React from "react";
+"use client";
+import React, { useState } from "react";
 import Link from "next/link";
 import "./styles.scss";
 import Image from "next/image";
@@ -7,11 +7,28 @@ import logo from "@/public/logo.png";
 import ProfileInfo from "../ProfileInfo";
 import { IoRocket } from "react-icons/io5";
 import useStudent from "@/shared/hooks/useStudent";
-
+import useAdmin from "@/shared/hooks/useAdmin";
 
 const Header = () => {
+  const [user, setUser] = useState<Record<string, any>>({});
   const studentState = useStudent();
-  const student = studentState?.data || {};
+  const adminState = useAdmin();
+  const student = studentState?.data || null;
+  const admin = adminState?.data || null;
+  useState(() => {
+    console.log("call user state ====================>>>>>")
+    if (admin) {
+      setUser(admin);
+    } else if (student) {
+      setUser(student);
+    } else {
+      setUser({});
+    }
+  }, [studentState.data, adminState.data]);
+
+  console.log("admin ====>>>", admin);
+  console.log("student ====>>>", student);
+  console.log("user ====>>>", user);
 
   return (
     <header className="main-header-section">
@@ -40,18 +57,17 @@ const Header = () => {
             </ul>
           </nav>
 
-          {!student?.email && <div className="header-actions">
-            <Link href="/signup" className="register-btn">
-              <IoRocket /> Register
-            </Link>
-          </div>}
-          {
-            student?.email && <ProfileInfo />
-          }
-
+          {!user?.email && (
+            <div className="header-actions">
+              <Link href="/signup" className="register-btn">
+                <IoRocket /> Register
+              </Link>
+            </div>
+          )}
+          {user?.email && <ProfileInfo user={adminState.data || studentState.data || {} } />}
         </div>
       </div>
-    </header >
+    </header>
   );
 };
 

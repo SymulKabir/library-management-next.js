@@ -8,17 +8,16 @@ import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import { IoIosArrowDown } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
-import ActionBookMenu from './components/ActionBookMenu/index';
+import ActionBookMenu from "./components/ActionBookMenu/index";
+import { LuSettings2 } from "react-icons/lu";
 
-const Dashboard = () => {
+const Inventory = () => {
   const router = useRouter();
   const [books, setBooks] = useState<any[]>([]);
-  const [category, setCategory] = useState("");
-  const [author, setAuthor] = useState("");
-  const [sort, setSort] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [filterItems, setFilterItems] = useState({});
+  const [filterInput, setFilterInput] = useState({sort: "desc"});
+  const [filterItems, setFilterItems] = useState({  });
   const state = useSelector((state: any) => state);
 
   console.log("Redux State:", state);
@@ -32,7 +31,7 @@ const Dashboard = () => {
       const res = await fetch("/api/books/get", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category, author, sort, page }),
+        body: JSON.stringify({ ...filterInput, page }),
       });
       const { data } = await res.json();
       setBooks(data || []);
@@ -58,32 +57,48 @@ const Dashboard = () => {
   }, []);
   useEffect(() => {
     fetchBooks();
-  }, [category, author, sort, page]);
-  
-  
+  }, []);
+
   const formatDate = (iso: string): string => {
-  const date = new Date(iso);
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = date.toLocaleString("en-US", { month: "short" });
-  const year = date.getFullYear();
-  let hours = date.getHours();
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const ampm = hours >= 12 ? "PM" : "AM";
-  hours = hours % 12 || 12;
-  return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
-};
-
-
-
+    const date = new Date(iso);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.toLocaleString("en-US", { month: "short" });
+    const year = date.getFullYear();
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12 || 12;
+    return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
+  };
+  const getFilteredData = (name: string) => {
+    return filterInput[name] || "";
+  };
+  const changeFIlter = (e) => {
+    const { name, value } = e.target;
+    setFilterInput((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleFilter = () => {
+    fetchBooks();
+  };
   return (
     <DashboardLayout>
       <div className="admin-inventory">
         <section className="filter-controls">
+          <div className="search">
+            <input
+              type="input"
+              placeholder="search by book name, book id or author"
+              name="search"
+              value={getFilteredData("search")}
+              onChange={changeFIlter}
+            />
+          </div>
           <div className="select">
             <label>Category:</label>
             <select
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
+              name="category"
+              value={getFilteredData("category")}
+              onChange={changeFIlter}
             >
               <option value="">All</option>
               {!!filterItems?.categories?.length &&
@@ -97,7 +112,11 @@ const Dashboard = () => {
 
           <div className="select">
             <label>Author:</label>
-            <select value={author} onChange={(e) => setAuthor(e.target.value)}>
+            <select
+              name="author"
+              value={getFilteredData("author")}
+              onChange={changeFIlter}
+            >
               <option value="">All</option>
               {!!filterItems?.authors?.length &&
                 filterItems?.authors?.map((author: string, index: number) => (
@@ -110,14 +129,20 @@ const Dashboard = () => {
 
           <div className="select">
             <label>Sort By:</label>
-            <select value={sort} onChange={(e) => setSort(e.target.value)}>
-              <option value="">Default</option>
+            <select
+              name="sort"
+              value={getFilteredData("sort")}
+              onChange={changeFIlter}
+            >
               <option value="asc">Oldest</option>
               <option value="desc">Newest</option>
-              <option value="bestsale">Best Sale</option>
             </select>
           </div>
-
+          <div className="button">
+            <button onClick={handleFilter}>
+              Filter <LuSettings2 />
+            </button>
+          </div>
           <div className="button">
             <button onClick={handleUpdateBookNav}>
               Add items <MdAdd />
@@ -162,7 +187,10 @@ const Dashboard = () => {
                       </button>
                       <button>
                         <PiDotsThreeOutlineVerticalDuotone />
-                        <ActionBookMenu book_id={book.book_id} setBooks={setBooks} />
+                        <ActionBookMenu
+                          book_id={book.book_id}
+                          setBooks={setBooks}
+                        />
                       </button>
                     </div>
                   </td>
@@ -192,7 +220,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
-
- 
-
+export default Inventory;

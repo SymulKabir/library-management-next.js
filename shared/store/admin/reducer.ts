@@ -1,14 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-interface Student {
-  student_id: string
+interface Admin {
+  admin_id: string
   name: string
   email: string
   created_at: number
 }
 
 interface StudentState {
-  data: Student | null
+  data: Admin | null
   progressing: boolean
 }
 
@@ -18,22 +18,22 @@ const initialState: StudentState = {
 }
 
 export const studentSlice = createSlice({
-  name: 'student',
+  name: 'admin',
   initialState,
   reducers: {
-    setStudent: (state, action: PayloadAction<Student>) => {
+    setAdmin: (state, action: PayloadAction<Admin>) => {
       console.log("action.payload ===================>", action.payload)
       state.data = {...action.payload}
     },
-    removeStudent: (state) => {
+    removeAdmin: (state) => {
       state.data = null
     },
-    updateStudentProgress: (state, action: PayloadAction<boolean>) => {
+    updateAdminProgress: (state, action: PayloadAction<boolean>) => {
       state.progressing = action.payload
     },
   },
 })
 
-export const { setStudent, removeStudent, updateStudentProgress } = studentSlice.actions
+export const { setAdmin, removeAdmin, updateAdminProgress } = studentSlice.actions
 
 export default studentSlice.reducer

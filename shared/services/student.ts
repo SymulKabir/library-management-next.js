@@ -1,4 +1,4 @@
-import { getToken } from "@/shared/utils/cookies";
+import { getStudentToken } from "@/shared/utils/cookies";
 
 interface CheckSigninProps {
   host?: string;
@@ -14,7 +14,7 @@ interface Student {
 
 export const checkSignin = async ({ host, token: tokenInput }: CheckSigninProps): Promise<Student | null> => {
   try {
-    const token = tokenInput || getToken();
+    const token = tokenInput || getStudentToken();
     console.log("token: ==>>", token);
 
     if (!token) return null;

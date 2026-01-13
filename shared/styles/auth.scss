@@ -42,9 +42,18 @@
         flex-direction: column;
         font-size: 0.9rem;
         color: rgb(55 65 81 / 1);
+        &.checkbox {
+          flex-direction: row;
+          gap: 10px;
+          align-items: center;
+          input{
+            margin-top: 0px;
+          }
+        }
       }
 
-      input, select {
+      input,
+      select {
         margin-top: 0.3rem;
         padding: 0.7rem 1rem;
         border: 1px solid #ddd;
@@ -62,7 +71,6 @@
           border-color: red;
         }
       }
-
 
       button {
         padding: 0.8rem;

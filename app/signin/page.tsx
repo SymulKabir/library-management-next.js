@@ -5,9 +5,20 @@ import Link from "next/link";
 import HeaderLayout from "@/shared/layouts/HeaderLayout";
 import { FaSignInAlt } from "react-icons/fa";
 import { promiseToast, warningToast } from "@/shared/utils/toast";
-import { setToken } from "@/shared/utils/cookies";
-import { setStudent, updateStudentProgress } from "@/shared/store/student/reducer";
+import {
+  removeAdminToken,
+  removeStudentToken,
+  setAdminToken,
+  setStudentToken,
+} from "@/shared/utils/cookies";
+import {
+  removeStudent,
+  setStudent,
+  updateStudentProgress,
+} from "@/shared/store/student/reducer";
 import { useSelector, useDispatch } from "react-redux";
+import { removeAdmin, setAdmin } from "@/shared/store/admin/reducer";
+
 const Signin = () => {
   const [form, setForm] = useState({
     email: "",
@@ -15,8 +26,9 @@ const Signin = () => {
   });
 
   const [warnings, setWarnings] = useState<Record<string, boolean>>({});
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const state = useSelector((state) => state);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   console.log("State:", state);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +59,8 @@ const Signin = () => {
       dispatch(updateStudentProgress(true));
 
       try {
-        const response = await fetch("/api/students/signin", {
+        const apiRoute = isAdmin ? "/api/admin/signin" : "/api/students/signin";
+        const response = await fetch(apiRoute, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(form),
@@ -57,11 +70,21 @@ const Signin = () => {
         if (!data) {
           throw new Error(message || "Signin failed");
         }
-        if (token) {
-          setToken(token);
+        if (isAdmin) {
+          if (token) {
+            setAdminToken(token);
+            removeStudentToken();
+          }
+          dispatch(setAdmin(data));
+          dispatch(removeStudent());
+        } else {
+          if (token) {
+            setStudentToken(token);
+            removeAdminToken();
+          }
+          dispatch(setStudent(data));
+          dispatch(removeAdmin());
         }
-        console.log("data ==>>", data);
-        dispatch(setStudent(data));
 
         return data;
       } catch (error) {
@@ -122,7 +145,15 @@ const Signin = () => {
                   className={getWarningClass("password")}
                 />
               </label>
-
+              <label className="checkbox">
+                Signin As Admin
+                <input
+                  type="checkbox"
+                  onChange={() => setIsAdmin((condition) => !condition)}
+                  checked={isAdmin}
+                  autoComplete="off"
+                />
+              </label>
               <button type="submit">
                 <FaSignInAlt /> Login
               </button>
