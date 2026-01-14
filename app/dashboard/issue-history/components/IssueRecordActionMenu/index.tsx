@@ -1,12 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { SlClose } from "react-icons/sl";
-import { FaRegCheckCircle } from "react-icons/fa";
 import "./styles.scss";
 import { promiseToast } from "@/shared/utils/toast";
-import { CiBookmarkCheck } from "react-icons/ci";
-import { adminHeader } from "@/shared/utils/header";
-
 
 interface Props {
   issue_id: string;
@@ -23,14 +19,14 @@ const IssueRecordActionMenu = ({
 
   const apiCall = async (status: string) => {
     setProcessing({ loading: true });
-    if (status === currentStatus) {
+    if (isDisabled()) {
       throw new Error("Status is already set to the selected value");
       return null;
     }
     try {
-      const response = await fetch("/api/issue-records/update-status", {
+      const response = await fetch("/api/issue-records/update-student-status", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json", ...adminHeader() },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ issue_id, status }),
       });
 
@@ -70,29 +66,17 @@ const IssueRecordActionMenu = ({
       console.error("Error:", err);
     }
   };
-  const isDisabled = (status: string) => {
-    return currentStatus === status;
+  const isDisabled = () => {
+    return currentStatus !== "Pending";
   };
 
   return (
     <div className="action-book-menu">
       <button
-        disabled={isDisabled("Issued")}
-        onClick={() => updateIssueStatus("Issued")}
+        disabled={isDisabled()}
+        onClick={() => updateIssueStatus("Canaled")}
       >
-        <FaRegCheckCircle /> Issue
-      </button>
-      <button
-        disabled={isDisabled("Rejected")}
-        onClick={() => updateIssueStatus("Rejected")}
-      >
-        <SlClose /> Reject
-      </button>
-      <button 
-        disabled={isDisabled("Returned")}
-        onClick={() => updateIssueStatus("Returned")}
-      >
-        <CiBookmarkCheck /> Return
+        <SlClose /> Canaled
       </button>
     </div>
   );

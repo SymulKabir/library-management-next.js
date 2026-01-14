@@ -7,19 +7,19 @@ import { IoIosArrowDown } from "react-icons/io";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import IssueRecordActionMenu from "./components/IssueRecordActionMenu/index";
 import { LuSettings2 } from "react-icons/lu";
-
+import { studentHeader } from "@/shared/utils/header";
 const statuses = ["Pending", "Canaled", "Issued", "Rejected", "Returned"];
 
-const BookIssuer = () => {
+const IssueHistory = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
   const [filterInputs, setFilterInputs] = useState({});
 
   const fetchIssueRecords = async () => {
     try {
 
-      const res = await fetch("/api/issue-records/get", {
+      const res = await fetch("/api/issue-records/student-records", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...studentHeader() },
         body: JSON.stringify(filterInputs),
       });
 
@@ -175,4 +175,4 @@ const BookIssuer = () => {
   );
 };
 
-export default BookIssuer;
+export default IssueHistory;

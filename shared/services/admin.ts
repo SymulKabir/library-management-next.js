@@ -1,4 +1,4 @@
-import { getStudentToken } from "@/shared/utils/cookies";
+import { getAdminToken, getStudentToken } from "@/shared/utils/cookies";
 
 interface CheckSigninProps {
   host?: string;
@@ -12,13 +12,13 @@ interface Student {
   created_at: number;
 }
 
-export const checkStudentSignin = async ({ host, token: tokenInput }: CheckSigninProps): Promise<Student | null> => {
+export const checkAdminSignin = async ({ host, token: tokenInput }: CheckSigninProps): Promise<Student | null> => {
   try {
-    const token = tokenInput || getStudentToken();
+    const token = tokenInput || getAdminToken();
 
     if (!token || token == undefined) return null;
 
-    const URL = host ? `${host}/api/students/check-signin` : `/api/students/check-signin`;
+    const URL = host ? `${host}/api/admin/check-signin` : `/api/admin/check-signin`;
     const response = await fetch(URL, {
       method: "GET",
       headers: {

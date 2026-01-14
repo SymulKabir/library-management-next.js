@@ -3,10 +3,7 @@ import { db } from "@/shared/lib/db";
 
 export async function GET(request: Request) {
   try {
-    console.log("Hello from check-signin =====================>>>");
-
     const authHeader = request.headers.get("Authorization");
-
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ message: "Unauthorized" }), {
         status: 401,
@@ -14,7 +11,6 @@ export async function GET(request: Request) {
     }
 
     const token = authHeader.split(" ")[1];
-
     let decoded: any;
 
     try {
@@ -25,7 +21,6 @@ export async function GET(request: Request) {
         { status: 401 }
       );
     }
-    console.log("decoded ->", decoded);
     const conn = await db();
     const [students] = await conn.execute(
       "SELECT student_id, name, email, created_at FROM students WHERE student_id = ? and email = ?",
@@ -34,7 +29,6 @@ export async function GET(request: Request) {
     await conn.end();
 
     const user = (students as any[])[0];
-    console.log("user ->", user);
     if (!user) {
       return new Response(JSON.stringify({ message: "User not found" }), {
         status: 404,

@@ -1,12 +1,9 @@
 import { db } from "@/shared/lib/db";
-import { decodedToken } from "@/shared/utils/token";
 
-const VALID_STATUSES = ["Pending", "Issued", "Rejected", "Returned"];
+const VALID_STATUSES = ["Canaled"];
 
 export const PATCH = async (request: Request) => {
   try {
-    const authHeader = request.headers.get("Authorization");
-    const { admin_id } = decodedToken(authHeader);
     const { issue_id, status } = await request.json();
 
     if (!issue_id || !status) {
@@ -18,10 +15,7 @@ export const PATCH = async (request: Request) => {
 
     if (!VALID_STATUSES.includes(status)) {
       return Response.json(
-        {
-          success: false,
-          message: `Invalid status. Allowed: ${VALID_STATUSES.join(", ")}`,
-        },
+        { success: false, message: `Invalid status. Allowed: ${VALID_STATUSES.join(", ")}` },
         { status: 400 }
       );
     }
@@ -35,10 +29,7 @@ export const PATCH = async (request: Request) => {
 
     if ((record as any[]).length === 0) {
       await conn.end();
-      return Response.json(
-        { success: false, message: "Issue record not found" },
-        { status: 404 }
-      );
+      return Response.json({ success: false, message: "Issue record not found" }, { status: 404 });
     }
 
     const issueRecord = (record as any[])[0];
@@ -62,16 +53,13 @@ export const PATCH = async (request: Request) => {
 
     // Update status
     await conn.execute(
-      "UPDATE issue_records SET status = ?, admin_id = ? WHERE issue_id = ?",
-      [status, admin_id, issue_id]
+      "UPDATE issue_records SET status = ? WHERE issue_id = ?",
+      [status, issue_id]
     );
 
     await conn.end();
 
-    return Response.json({
-      success: true,
-      message: "Status updated successfully",
-    });
+    return Response.json({ success: true, message: "Status updated successfully" });
   } catch (error: any) {
     console.log("error ---->>>", error);
     return Response.json(

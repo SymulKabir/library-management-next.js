@@ -67,7 +67,7 @@ const initAdminsDB = async () => {
       name VARCHAR(100) NOT NULL,
       email VARCHAR(150) NOT NULL UNIQUE,
       role VARCHAR(150) NOT NULL,
-      status ENUM('Pending','Approved','Rejected','Ban') NOT NULL DEFAULT 'Pending',
+      status ENUM('Pending', 'Approved','Rejected','Ban') NOT NULL DEFAULT 'Pending',
       password VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -87,7 +87,7 @@ const initIssueRecordsDB = async () => {
       book_id VARCHAR(100) NOT NULL,
       issue_date DATE NOT NULL,
       return_date DATE,
-      status ENUM('Pending','Issued','Rejected','Returned') NOT NULL DEFAULT 'Pending',
+      status ENUM('Pending', 'Canaled', 'Issued','Rejected','Returned') NOT NULL DEFAULT 'Pending',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       FOREIGN KEY (student_id) REFERENCES students(student_id) ON DELETE CASCADE,

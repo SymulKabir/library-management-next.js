@@ -18,19 +18,19 @@ import {
 } from "@/shared/store/student/reducer";
 import { useSelector, useDispatch } from "react-redux";
 import { removeAdmin, setAdmin } from "@/shared/store/admin/reducer";
+import { useRouter } from "next/navigation";
 
 const Signin = () => {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-
   const [warnings, setWarnings] = useState<Record<string, boolean>>({});
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const state = useSelector((state) => state);
   const dispatch = useDispatch();
+  const router = useRouter();
 
-  console.log("State:", state);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -96,10 +96,18 @@ const Signin = () => {
 
     try {
       const result = await promiseToast(apiCall(), {
-        pending: "Signing up...",
+        pending: "Signing in...",
         success: "Signin successful!",
-        error: "Signin failed. Please try again.",
+        error: {
+          render: ({ data }: { data: Error }) =>
+            data.message || "Signin failed. Please try again.",
+        },
       });
+
+      if (result?.email) {
+        router.push(isAdmin ? "/admin/dashboard" : "/dashboard");
+      }
+
       console.log("API Result:", result);
     } catch (err) {
       console.error("Signin error:", err);

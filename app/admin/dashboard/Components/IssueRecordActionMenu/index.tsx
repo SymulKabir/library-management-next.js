@@ -3,21 +3,19 @@ import React, { useState } from "react";
 import { SlClose } from "react-icons/sl";
 import { FaRegCheckCircle } from "react-icons/fa";
 import "./styles.scss";
-import { promiseToast } from "@/shared/utils/toast";
-import { CiBookmarkCheck } from "react-icons/ci";
-import { adminHeader } from "@/shared/utils/header";
-
+import { promiseToast } from "@/shared/utils/toast"; 
+import { FaBan } from "react-icons/fa";
 
 interface Props {
-  issue_id: string;
+  admin_id: string;
   currentStatus: string;
-  setBookIssuers: (fn: any) => void;
-}
+  setAdmins: (fn: any) => void;
+} 
 
 const IssueRecordActionMenu = ({
-  issue_id,
+  admin_id,
   currentStatus,
-  setBookIssuers,
+  setAdmins,
 }: Props) => {
   const [processing, setProcessing] = useState({ loading: false });
 
@@ -28,18 +26,18 @@ const IssueRecordActionMenu = ({
       return null;
     }
     try {
-      const response = await fetch("/api/issue-records/update-status", {
+      const response = await fetch("/api/admin/update-status", {
         method: "PATCH",
-        headers: { "Content-Type": "application/json", ...adminHeader() },
-        body: JSON.stringify({ issue_id, status }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ admin_id, status }),
       });
 
       const { success, message } = await response.json();
       if (!success) throw new Error(message || "Failed to update status");
 
-      setBookIssuers((state: any[]) =>
+      setAdmins((state: any[]) =>
         state.map((b) => {
-          if (b.issue_id === issue_id) {
+          if (b.admin_id === admin_id) {
             b["status"] = status;
           }
           return { ...b };
@@ -57,10 +55,10 @@ const IssueRecordActionMenu = ({
     if (processing.loading) return;
     try {
       await promiseToast(apiCall(status), {
-        pending: `Updating ${issue_id}...`,
+        pending: `Updating ${admin_id}...`,
         success: {
           render: () =>
-            `Book issue request ID:${issue_id} updated successfully!`,
+            `Book issue request ID:${admin_id} updated successfully!`,
         },
         error: {
           render: ({ data }: { data: Error }) => data.message,
@@ -77,22 +75,22 @@ const IssueRecordActionMenu = ({
   return (
     <div className="action-book-menu">
       <button
-        disabled={isDisabled("Issued")}
-        onClick={() => updateIssueStatus("Issued")}
+        disabled={isDisabled("Approved")}
+        onClick={() => updateIssueStatus("Approved")}
       >
-        <FaRegCheckCircle /> Issue
+        <FaRegCheckCircle /> Approved
       </button>
       <button
         disabled={isDisabled("Rejected")}
         onClick={() => updateIssueStatus("Rejected")}
       >
-        <SlClose /> Reject
+        <SlClose /> Rejected
       </button>
       <button 
-        disabled={isDisabled("Returned")}
-        onClick={() => updateIssueStatus("Returned")}
+        disabled={isDisabled("Ban")}
+        onClick={() => updateIssueStatus("Ban")}
       >
-        <CiBookmarkCheck /> Return
+        <FaBan /> Ban
       </button>
     </div>
   );

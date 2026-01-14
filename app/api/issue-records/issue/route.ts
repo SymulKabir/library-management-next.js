@@ -44,7 +44,7 @@ export const POST = async (request: Request) => {
     await conn.execute(
       `INSERT INTO issue_records (student_id, book_id, issue_date, return_date, status)
        VALUES (?, ?, ?, ?, ?)`,
-      [student_id, book_id, mysqlIssueDate, mysqlReturnDate, "Rejected"]
+      [student_id, book_id, mysqlIssueDate, mysqlReturnDate, "Pending"]
     );
 
     await conn.execute(

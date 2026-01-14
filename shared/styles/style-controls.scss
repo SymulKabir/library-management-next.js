@@ -136,9 +136,12 @@
         }
       }
       &.issued,
+      &.approved,
+      &.canaled,
       &.returned,
       &.pending,
-      &.rejected {
+      &.rejected,
+      &.ban {
         p {
           font-weight: 600;
           padding: 3px 7px;
@@ -148,10 +151,18 @@
         }
       }
 
-      &.issued p {
-        background-color: green;
+      &.issued,
+      &.approved {
+        p {
+          background-color: green;
+        }
       }
-
+      &.canaled,
+      &.ban {
+        p {
+          background-color: #6c757d;
+        }
+      }
       &.returned p {
         background-color: blue;
       }

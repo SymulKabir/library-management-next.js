@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import "./styles.scss";
 import Image from "next/image";
@@ -15,20 +15,15 @@ const Header = () => {
   const adminState = useAdmin();
   const student = studentState?.data || null;
   const admin = adminState?.data || null;
-  useState(() => {
-    console.log("call user state ====================>>>>>")
+  useEffect(() => {
     if (admin) {
-      setUser(admin);
+      setUser({ ...admin, route: "/admin/dashboard" });
     } else if (student) {
-      setUser(student);
+      setUser({ ...student, route: "/dashboard" });
     } else {
       setUser({});
     }
-  }, [studentState.data, adminState.data]);
-
-  console.log("admin ====>>>", admin);
-  console.log("student ====>>>", student);
-  console.log("user ====>>>", user);
+  }, [student, admin]); 
 
   return (
     <header className="main-header-section">
@@ -64,7 +59,7 @@ const Header = () => {
               </Link>
             </div>
           )}
-          {user?.email && <ProfileInfo user={adminState.data || studentState.data || {} } />}
+          {user?.email && <ProfileInfo user={user} />}
         </div>
       </div>
     </header>
