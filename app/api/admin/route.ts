@@ -22,6 +22,7 @@ export async function POST(request: Request) {
 
     const conn = await db();
 
+
     const [existingEmail] = await conn.execute(
       "SELECT admin_id FROM admins WHERE email = ?",
       [email]
@@ -36,10 +37,21 @@ export async function POST(request: Request) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await conn.execute(
-      "INSERT INTO admins (name, email, role, password) VALUES (?, ?, ?, ?)",
-      [name, email, role, hashedPassword]
+    const [emptyTable] = await conn.execute(
+      "SELECT admin_id FROM admins"
     );
+    if ((emptyTable as any[]).length === 0) {
+      await conn.execute(
+        "INSERT INTO admins (name, email, role, status, password) VALUES (?, ?, ?, ?, ?)",
+        [name, email, role, 'Approved', hashedPassword]
+      );
+    } else {
+      await conn.execute(
+        "INSERT INTO admins (name, email, role, password) VALUES (?, ?, ?, ?)",
+        [name, email, role, hashedPassword]
+      );
+    }
+
 
     const [data] = await conn.execute(
       "SELECT admin_id, name, email, created_at FROM admins WHERE email = ?",

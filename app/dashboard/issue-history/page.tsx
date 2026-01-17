@@ -8,7 +8,13 @@ import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import IssueRecordActionMenu from "./components/IssueRecordActionMenu/index";
 import { LuSettings2 } from "react-icons/lu";
 import { studentHeader } from "@/shared/utils/header";
+import CustomSelect from '@/shared/components/CustomSelect/index';
 const statuses = ["Pending", "Canaled", "Issued", "Rejected", "Returned"];
+
+const SORT_BY : Record<string, string> = {
+  asc: "Oldest",
+  desc: "Newest"
+}
 
 const IssueHistory = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
@@ -73,7 +79,7 @@ const IssueHistory = () => {
           </div>
           <div className="select">
             <label>Status:</label>
-            <select
+            <CustomSelect
               name="status"
               value={getFilteredData("status")}
               onChange={changeFIlter}
@@ -85,18 +91,21 @@ const IssueHistory = () => {
                     {status}
                   </option>
                 ))}
-            </select>
+            </CustomSelect>
           </div>
           <div className="select">
             <label>Sort By:</label>
-            <select
+            <CustomSelect
               name="sort"
-              value={getFilteredData("sort")}
+              value={SORT_BY[getFilteredData("sort")]}
               onChange={changeFIlter}
             >
-              <option value="asc">Oldest</option>
-              <option value="desc">Newest</option>
-            </select>
+              {
+                Object.keys(SORT_BY).map((key, index) => {
+                  return <option key={index} value={key}>{SORT_BY[key]}</option>
+                })
+              }
+            </CustomSelect>
           </div>
 
           <div className="button">

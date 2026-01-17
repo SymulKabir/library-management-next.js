@@ -10,6 +10,14 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import ActionBookMenu from "./components/ActionBookMenu/index";
 import { LuSettings2 } from "react-icons/lu";
+import CustomSelect from '@/shared/components/CustomSelect/index';
+
+
+const sortBy = {
+  asc: "Oldest",
+  desc: "Newest"
+}
+
 
 const Inventory = () => {
   const router = useRouter();
@@ -95,7 +103,7 @@ const Inventory = () => {
           </div>
           <div className="select">
             <label>Category:</label>
-            <select
+            <CustomSelect
               name="category"
               value={getFilteredData("category")}
               onChange={changeFIlter}
@@ -107,12 +115,12 @@ const Inventory = () => {
                     {category}
                   </option>
                 ))}
-            </select>
+            </CustomSelect>
           </div>
 
           <div className="select">
             <label>Author:</label>
-            <select
+            <CustomSelect
               name="author"
               value={getFilteredData("author")}
               onChange={changeFIlter}
@@ -124,19 +132,21 @@ const Inventory = () => {
                     {author}
                   </option>
                 ))}
-            </select>
+            </CustomSelect>
           </div>
-
           <div className="select">
             <label>Sort By:</label>
-            <select
+            <CustomSelect
               name="sort"
-              value={getFilteredData("sort")}
+              value={sortBy[getFilteredData("sort")]}
               onChange={changeFIlter}
             >
-              <option value="asc">Oldest</option>
-              <option value="desc">Newest</option>
-            </select>
+              {
+                Object.keys(sortBy).map((key, index) => {
+                  return <option key={index} value={key}>{sortBy[key]}</option>
+                })
+              }
+            </CustomSelect>
           </div>
           <div className="button">
             <button onClick={handleFilter}>

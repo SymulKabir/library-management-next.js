@@ -6,8 +6,15 @@ import DashboardLayout from "@/shared/layouts/DashboardLayout/index";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import { LuSettings2 } from "react-icons/lu";
 import IssueRecordActionMenu from "./Components/IssueRecordActionMenu/index";
+import CustomSelect from '@/shared/components/CustomSelect/index'
+
+
 
 const statuses = ["Approved", "Rejected", "Ban"];
+const sortBy = {
+  asc: "Oldest",
+  desc: "Newest"
+}
 
 const Dashboard = () => {
   const [admins, setAdmins] = useState<any[]>([]);
@@ -77,32 +84,35 @@ const Dashboard = () => {
             />
           </div>
 
-          <div className="select">
+          <div className="custom-select">
             <label>Status:</label>
-            <select
+            <CustomSelect
               name="status"
               value={getFilteredData("status")}
               onChange={changeFilter}
+              placeholder={"All"}
             >
-              <option value="">All</option>
               {statuses.map((status, i) => (
                 <option key={i} value={status}>
                   {status}
                 </option>
               ))}
-            </select>
+            </CustomSelect>
           </div>
 
           <div className="select">
             <label>Sort By:</label>
-            <select
+            <CustomSelect
               name="sort"
-              value={getFilteredData("sort")}
+              value={sortBy[getFilteredData("sort")]}
               onChange={changeFilter}
             >
-              <option value="asc">Oldest</option>
-              <option value="desc">Newest</option>
-            </select>
+              {
+                Object.keys(sortBy).map((key, index) => {
+                  return <option key={index} value={key}>{sortBy[key]}</option>
+                })
+              }
+            </CustomSelect>
           </div>
 
           <div className="button">
@@ -153,7 +163,7 @@ const Dashboard = () => {
                       <div>
                         <button>
                           <PiDotsThreeOutlineVerticalDuotone />
-                          <IssueRecordActionMenu  admin_id={item.admin_id} currentStatus={item.status} setAdmins={setAdmins} />
+                          <IssueRecordActionMenu admin_id={item.admin_id} currentStatus={item.status} setAdmins={setAdmins} />
                         </button>
                       </div>
                     </td>

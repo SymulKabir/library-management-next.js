@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     await conn.end();
 
     const user = (admins as any[])[0];
-
+console.log("user -->>", user)
     if (!user) {
       return new Response(
         JSON.stringify({ message: "Invalid email or password!" }),
@@ -54,7 +54,6 @@ export async function POST(request: Request) {
       admin_id: user.admin_id,
       email: user.email,
     });
-
     return new Response(JSON.stringify({ data: userData, token }), {
       status: 200,
       headers: { "Content-Type": "application/json" },

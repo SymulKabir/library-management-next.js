@@ -3,14 +3,15 @@ import React, { useState } from "react";
 import { SlClose } from "react-icons/sl";
 import { FaRegCheckCircle } from "react-icons/fa";
 import "./styles.scss";
-import { promiseToast } from "@/shared/utils/toast"; 
+import { promiseToast } from "@/shared/utils/toast";
 import { FaBan } from "react-icons/fa";
+import useAdmin from '@/shared/hooks/useAdmin'
 
 interface Props {
   admin_id: string;
   currentStatus: string;
   setAdmins: (fn: any) => void;
-} 
+}
 
 const IssueRecordActionMenu = ({
   admin_id,
@@ -18,6 +19,8 @@ const IssueRecordActionMenu = ({
   setAdmins,
 }: Props) => {
   const [processing, setProcessing] = useState({ loading: false });
+  const adminState = useAdmin()
+  const admin = adminState.data
 
   const apiCall = async (status: string) => {
     setProcessing({ loading: true });
@@ -37,7 +40,7 @@ const IssueRecordActionMenu = ({
 
       setAdmins((state: any[]) =>
         state.map((b) => {
-          if (b.admin_id === admin_id) {
+          if (b?.admin_id === admin_id) {
             b["status"] = status;
           }
           return { ...b };
@@ -69,6 +72,7 @@ const IssueRecordActionMenu = ({
     }
   };
   const isDisabled = (status: string) => {
+    if (admin?.admin_id === admin_id) return true
     return currentStatus === status;
   };
 
@@ -86,7 +90,7 @@ const IssueRecordActionMenu = ({
       >
         <SlClose /> Rejected
       </button>
-      <button 
+      <button
         disabled={isDisabled("Ban")}
         onClick={() => updateIssueStatus("Ban")}
       >

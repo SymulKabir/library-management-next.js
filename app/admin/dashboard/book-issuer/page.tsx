@@ -7,9 +7,13 @@ import { IoIosArrowDown } from "react-icons/io";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import IssueRecordActionMenu from "./components/IssueRecordActionMenu/index";
 import { LuSettings2 } from "react-icons/lu";
+import CustomSelect from '@/shared/components/CustomSelect/index';
 
 const statuses = ["Pending", "Canaled", "Issued", "Rejected", "Returned"];
-
+const sortBy = {
+  asc: "Oldest",
+  desc: "Newest"
+}
 const BookIssuer = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
   const [filterInputs, setFilterInputs] = useState({});
@@ -73,7 +77,7 @@ const BookIssuer = () => {
           </div>
           <div className="select">
             <label>Status:</label>
-            <select
+            <CustomSelect
               name="status"
               value={getFilteredData("status")}
               onChange={changeFIlter}
@@ -85,20 +89,22 @@ const BookIssuer = () => {
                     {status}
                   </option>
                 ))}
-            </select>
+            </CustomSelect>
           </div>
           <div className="select">
             <label>Sort By:</label>
-            <select
+            <CustomSelect
               name="sort"
-              value={getFilteredData("sort")}
+              value={sortBy[getFilteredData("sort")]}
               onChange={changeFIlter}
             >
-              <option value="asc">Oldest</option>
-              <option value="desc">Newest</option>
-            </select>
+              {
+                Object.keys(sortBy).map((key, index) => {
+                  return <option key={index} value={key}>{sortBy[key]}</option>
+                })
+              }
+            </CustomSelect>
           </div>
-
           <div className="button">
             <button onClick={handleFilter}>
               Filter <LuSettings2 />
