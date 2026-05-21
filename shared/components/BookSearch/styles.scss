@@ -1,0 +1,135 @@
+.book-search-section {
+    width: 100%;
+    height: calc(100% - 15px);
+    max-width: 600px;
+    position: relative;
+
+    .search-container {
+        border: 2px solid #f2f2f5;
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        padding-left: 15px;
+        width: 100%;
+        height: 100%;
+        border-radius: 40px;
+        background-color: #f2f2f5;
+
+        &:hover {
+            background-color: transparent;
+        }
+
+        &:focus-within+.search-result-container {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+
+        input,
+        button {
+            // display: block;
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            background-color: transparent;
+
+
+
+        }
+
+        input {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: var(--primary-background);
+            color: #FFF;
+            aspect-ratio: 1/1;
+            width: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+
+            svg {
+                height: calc(100% - 15px);
+                width: calc(100% - 15px);
+            }
+        }
+    }
+
+
+    .search-result-container {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        width: 100%;
+        background-color: #fff;
+        border-radius: 16px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        z-index: 50;
+
+        max-height: 300px;
+        overflow-y: auto;
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(10px);
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+        overflow-y: scroll;
+        overscroll-behavior: contain;
+
+        &.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 8px 0;
+
+            li {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 10px 15px;
+                font-size: 14px;
+                cursor: pointer;
+                transition: background 0.2s ease;
+
+                svg {
+                    font-size: 16px;
+                    color: #999;
+                }
+
+                span {
+                    font-weight: 500;
+                    color: #333;
+                }
+
+                small {
+                    display: block;
+                    font-size: 12px;
+                    color: #888;
+                }
+
+                &:hover {
+                    background-color: #f5f7fb;
+                }
+            }
+        }
+
+        p {
+            padding: 12px;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+    }
+}

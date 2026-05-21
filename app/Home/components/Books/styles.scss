@@ -1,0 +1,23 @@
+.book-grid-section{
+    margin: 2rem 0;
+    background-color: #FFF;
+    padding: 20px 10px;
+    .book-grid-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1rem;
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--primary-text-color);
+        }
+    }
+
+    .book-grid-container {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+}
