@@ -1,0 +1,156 @@
+.book-search-section {
+  width: 100%;
+  height: calc(100% - 15px);
+  max-width: 600px;
+  position: relative;
+
+  .search-container {
+    $size: 30px;
+    border: 2px solid #f2f2f5;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    border-radius: 40px;
+    background-color: #f2f2f5;
+
+    &:hover {
+      background-color: transparent;
+      button {
+        background-color: #f2f2f5;
+      }
+    }
+
+    &:focus-within + .search-result-container {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    input,
+    button {
+      // display: block;
+      width: 100%;
+      height: 100%;
+      border: none;
+      outline: none;
+      background-color: transparent;
+    }
+
+    img{
+      height: $size;
+      width: $size;
+    }
+    input {
+      margin: 0px 10px;
+    }
+
+
+    button {
+      // background-color: var(--primary-background);
+      // color: #FFF;
+      height:  $size;
+      width: $size;
+      min-width:  $size;
+      background-color: #fff;
+      color: #4d4d4d;
+      aspect-ratio: 1/1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      position: relative;
+
+      svg {
+        height: calc(100% - 15px);
+        width: calc(100% - 15px);
+      }
+      &.img-section {
+        overflow: hidden;
+        input {
+          position: absolute;
+          left: -10px;
+          top: 0px;
+          height: 100%;
+          width: 100%;
+          z-index: 9;
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  .search-result-container {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background-color: #fff;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    z-index: 50;
+
+    max-height: 300px;
+    overflow-y: auto;
+
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    overscroll-behavior: contain;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 8px 0;
+
+      li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 15px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        svg {
+          font-size: 16px;
+          color: #999;
+        }
+
+        span {
+          font-weight: 500;
+          color: #333;
+        }
+
+        small {
+          display: block;
+          font-size: 12px;
+          color: #888;
+        }
+
+        &:hover {
+          background-color: #f5f7fb;
+        }
+      }
+    }
+
+    p {
+      padding: 12px;
+      text-align: center;
+      color: #888;
+      font-size: 14px;
+    }
+  }
+}

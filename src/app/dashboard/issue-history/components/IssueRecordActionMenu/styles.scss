@@ -1,0 +1,37 @@
+.action-book-menu {
+    background-color: #FFFFFF;
+    padding: 10px 5px;
+    box-shadow: 0px 15px 50px 0px rgba(27, 32, 50, 0.1);
+    position: absolute;
+    z-index: 9;
+    border-radius: 5px;
+    right: -10px;
+    top: 12px;
+    min-width: 120px;
+    flex-direction: column;
+    button {
+        display: flex;
+        align-items: start !important;
+        justify-content: start !important;
+        gap: 8px;
+        width: 100%;
+        padding: 8px 12px;
+        // background-color: transparent;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        color: var(--primary-text-color);
+        transition: background-color 0.2s ease-in-out;
+        &:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        &:hover {
+            background-color: #F5F7FA !important;
+        }
+
+        svg {
+            font-size: 20px;
+        }
+    }
+}
