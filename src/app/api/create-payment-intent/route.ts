@@ -1,8 +1,7 @@
 // app/api/create-payment-intent/route.ts
-import { STRIPE_SECRET_KEY } from "@/src/constants";
 import Stripe from "stripe";
 
-const stripe = new Stripe(STRIPE_SECRET_KEY!, {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-07-30.basil",
 });
 

@@ -1,70 +1,109 @@
 "use client";
-
 import { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  Elements,
-  PaymentElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import { STRIPE_PUBLISHABLE_KEY } from "@/src/constants";
+import { Elements } from "@stripe/react-stripe-js";
+import CheckoutForm from "./CheckoutForm";
+import "./style.scss";
 
-const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY!);
+import { IoClose } from "react-icons/io5";
+import { HiOutlineCreditCard, HiOutlineShieldCheck } from "react-icons/hi2";
 
-function CheckoutForm() {
-  const stripe = useStripe();
-  const elements = useElements();
+const stripePromise = loadStripe(
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+);
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+export default function Page() {
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-    if (!stripe || !elements) return;
-
-    const result = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/success`,
-      },
-    });
-
-    if (result.error) {
-      console.log(result.error.message);
+  const openModal = async () => {
+    setIsOpen(true);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/create-payment-intent", {
+        method: "POST",
+      });
+      const data = await res.json();
+      setClientSecret(data.clientSecret);
+    } catch (error) {
+      console.error("Payment initiation failed:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <PaymentElement />
-      <button type="submit">Pay</button>
-    </form>
-  );
-}
-
-export default function Page() {
-  const [open, setOpen] = useState(false);
-  const [clientSecret, setClientSecret] = useState("");
-
-  const openModal = async () => {
-    const res = await fetch("/api/create-payment-intent", {
-      method: "POST",
-    });
-
-    const data = await res.json();
-    console.log("data --->>>", data)
-    setClientSecret(data.clientSecret);
-    setOpen(true);
+  const closeModal = () => {
+    setIsOpen(false);
+    setClientSecret(null);
   };
 
   return (
-    <div>
-      <button onClick={openModal}>Buy Now</button>
+    <div style={{ padding: "2rem" }}>
+      <button onClick={openModal} className="premium-trigger-btn">
+        Buy Premium Access
+      </button>
 
-      {open && clientSecret && (
-        <div className="modal">
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <CheckoutForm />
-          </Elements>
+      {isOpen && (
+        <div className="checkout-overlay">
+          <div className="checkout-modal">
+            
+            <div className="checkout-modal__header">
+              <div>
+                <h3 className="header-title">
+                  <HiOutlineCreditCard className="card-icon" /> Secure Checkout
+                </h3>
+                <p className="header-subtitle">BookHive Digital Library Hub</p>
+              </div>
+              <button onClick={closeModal} className="close-btn">
+                <IoClose size={24} />
+              </button>
+            </div>
+
+            <div className="checkout-modal__body">
+              <div className="summary-card">
+                <div>
+                  <span className="summary-card__label">Premium Membership</span>
+                  <p className="summary-card__desc">Unlimited Book Issuance (1 Month)</p>
+                </div>
+                <div className="summary-card__price">$9.99</div>
+              </div>
+
+              {loading ? (
+                <div className="skeleton-loader">
+                  <div className="skeleton-loader__bar"></div>
+                  <div className="skeleton-loader__bar"></div>
+                  <div className="skeleton-loader__btn"></div>
+                </div>
+              ) : (
+                clientSecret && (
+                  <Elements 
+                    stripe={stripePromise} 
+                    options={{ 
+                      clientSecret,
+                      appearance: {
+                        theme: 'stripe',
+                        variables: {
+                          colorPrimary: '#f59e0b',
+                          colorBackground: '#ffffff',
+                          colorText: '#1e293b',
+                          borderRadius: '8px',
+                        }
+                      }
+                    }}
+                  >
+                    <CheckoutForm />
+                  </Elements>
+                )
+              )}
+            </div>
+
+            <div className="checkout-modal__footer">
+              <HiOutlineShieldCheck size={20} className="shield-icon" />
+              <span>Guaranteed safe & secure checkout by Stripe</span>
+            </div>
+
+          </div>
         </div>
       )}
     </div>
