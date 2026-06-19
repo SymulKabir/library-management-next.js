@@ -9,8 +9,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "init-db": "npx tsx init_db.ts",
-    "insert-book": "npx tsx insert_books.ts",
+    "db:migrate": "npx tsx src/db/migrate.ts",
+    "db:migrate:reset": "REMOVE_DB='True' npx tsx src/db/migrate.ts",
+    "insert-book": "npx tsx src/db/seed.ts",
     "lint": "eslint"
   },
   "dependencies": {

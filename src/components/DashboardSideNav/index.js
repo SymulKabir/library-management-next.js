@@ -23,13 +23,13 @@ const ADMIN_DASHBOARD_MENUS = [
   {
     label: "Book Issuer",
     svg: <LuNotebookPen />,
-    route: "/admin/dashboard/book-issuer",
+    route: "/admin/dashboard/book-issues",
   },
 ];
 const STUDENT_DASHBOARD_MENUS = [
   { label: "Dashboard", svg: <BiSolidDashboard />, route: "/dashboard" },
   {
-    label: "Issuer History",
+    label: "Issue History",
     svg: <LuClipboardList />,
     route: "/dashboard/issue-history",
   },

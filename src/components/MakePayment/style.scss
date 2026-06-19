@@ -14,23 +14,6 @@
   to { transform: rotate(360deg); }
 }
 
-// 1. Premium Trigger Button
-.premium-trigger-btn {
-  padding: 0.75rem 1.5rem;
-  background: linear-gradient(to right, #f59e0b, #ea580c);
-  color: #ffffff;
-  font-weight: 600;
-  border-radius: 0.5rem;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: all 0.2s ease-in-out;
-
-  &:hover {
-    background: linear-gradient(to right, #d97706, #c2410c);
-    transform: translateY(-2px);
-  }
-}
 
 // 2. Checkout Modal Layout
 .checkout-overlay {

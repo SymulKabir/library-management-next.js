@@ -1,17 +1,19 @@
-import {db} from '@/src/lib/db'
-import { deleteAllBookVector } from '@/src/services/book';
+import { db } from "@/src/lib/db";
+import { deleteAllBookVector } from "@/src/services/book";
 
 // Drop all tables safely
 const dropAllTables = async () => {
-  const conn = await db();
-  await conn.execute("SET FOREIGN_KEY_CHECKS = 0");
-  await conn.execute("DROP TABLE IF EXISTS issue_records");
-  await conn.execute("DROP TABLE IF EXISTS students");
-  await conn.execute("DROP TABLE IF EXISTS books");
-  await conn.execute("DROP TABLE IF EXISTS admins");
-  await conn.execute("SET FOREIGN_KEY_CHECKS = 1");
-  await conn.end();
-  await deleteAllBookVector()
+  // const conn = await db();
+  // await conn.execute("SET FOREIGN_KEY_CHECKS = 0");
+  // await conn.execute("DROP TABLE IF EXISTS issue_records");
+  // await conn.execute("DROP TABLE IF EXISTS issue_record_fines");
+  // await conn.execute("DROP TABLE IF EXISTS issue_record_fine_payments"); // Drop payment table first
+  // await conn.execute("DROP TABLE IF EXISTS students");
+  // await conn.execute("DROP TABLE IF EXISTS books");
+  // await conn.execute("DROP TABLE IF EXISTS admins");
+  // await conn.execute("SET FOREIGN_KEY_CHECKS = 1");
+  // await conn.end();
+  // await deleteAllBookVector()
 };
 
 // Initialize tables
@@ -93,12 +95,58 @@ const initIssueRecordsDB = async () => {
   console.log("Issue Records table initialized.");
 };
 
+const initIssueRecordFinesDB = async () => {
+  const conn = await db();
+  await conn.execute(`
+    CREATE TABLE issue_record_fines (
+      fine_id INT AUTO_INCREMENT PRIMARY KEY,
+      issue_id INT NOT NULL,
+      admin_id INT,
+      fine_amount DECIMAL(10, 2) NOT NULL,
+      fine_reason VARCHAR(255) DEFAULT 'No reason specified',
+      fine_notes TEXT,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+      FOREIGN KEY (issue_id) REFERENCES issue_records(issue_id) ON DELETE CASCADE,
+      FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE SET NULL
+    )
+  `);
+  await conn.end();
+  console.log("Issue Record Fines table initialized.");
+};
+
+const initIssueRecordFinePaymentsDB = async () => {
+  const conn = await db();
+  await conn.execute(`
+    CREATE TABLE issue_record_fine_payments (
+      payment_id INT AUTO_INCREMENT PRIMARY KEY,
+      fine_id INT NOT NULL,
+      admin_id INT,
+      amount_paid DECIMAL(10, 2) NOT NULL,
+      payment_method ENUM('Cash', 'bKash', 'Nagad', 'Rocket', 'Bank_Transfer') NOT NULL DEFAULT 'Cash',
+      transaction_id VARCHAR(100) DEFAULT NULL,
+      /* Updated to an ENUM structure with an explicit default string */
+      status ENUM('Pending', 'Completed', 'Failed', 'Refunded') NOT NULL DEFAULT 'Completed',
+      payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (fine_id) REFERENCES issue_record_fines(fine_id) ON DELETE CASCADE,
+      FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE SET NULL
+    )
+  `);
+  await conn.end();
+  console.log("Issue Record Fine Payments table initialized.");
+};
+
 const init = async () => {
-  await dropAllTables();
+
+  if (process.env.REMOVE_DB) {
+    // await dropAllTables();
+  }
   await initStudentDB();
   await initBooksDB();
   await initAdminsDB();
   await initIssueRecordsDB();
+  await initIssueRecordFinesDB();
+  await initIssueRecordFinePaymentsDB();
 };
 
 init();

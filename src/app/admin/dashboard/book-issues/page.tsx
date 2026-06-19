@@ -7,20 +7,24 @@ import { IoIosArrowDown } from "react-icons/io";
 import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import IssueRecordActionMenu from "./components/IssueRecordActionMenu/index";
 import { LuSettings2 } from "react-icons/lu";
-import CustomSelect from '@/src/components/CustomSelect/index';
+import CustomSelect from "@/src/components/CustomSelect/index";
+import FineModal from "@/src/components/Modal/FineModal";
+import { promiseToast } from "@/src/utils/toast";
+import { adminHeader } from "@/src/utils/header";
 
 const statuses = ["Pending", "Canaled", "Issued", "Rejected", "Returned"];
 const sortBy = {
   asc: "Oldest",
-  desc: "Newest"
-}
+  desc: "Newest",
+};
 const BookIssuer = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
   const [filterInputs, setFilterInputs] = useState({});
+  const [fineModalData, setFineModalData] = useState(null);
+  const [processing, setProcessing] = useState({ loading: false });
 
   const fetchIssueRecords = async () => {
     try {
-
       const res = await fetch("/api/issue-records/get", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -59,6 +63,87 @@ const BookIssuer = () => {
   const getFilteredData = (name) => {
     return filterInputs[name] || "";
   };
+
+  const closeFineModal = () => {
+    setFineModalData(null);
+  };
+
+  const apiCall = async ({
+    issue_id,
+    status,
+    updateStatus,
+    fineAmount,
+    fineReason,
+  }: any) => {
+    setProcessing({ loading: true });
+    if (updateStatus === status) {
+      throw new Error("Status is already set to the selected value");
+      return null;
+    }
+    try {
+      const response = await fetch("/api/issue-records/update-status", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", ...adminHeader() },
+        body: JSON.stringify({
+          issue_id,
+          status: updateStatus,
+          fineAmount,
+          fineReason,
+        }),
+      });
+
+      const { success, message } = await response.json();
+      if (!success) throw new Error(message || "Failed to update status");
+
+      setBookIssuers((state: any[]) =>
+        state.map((b) => {
+          if (b.issue_id === issue_id) {
+            b["status"] = updateStatus;
+          }
+          return { ...b };
+        }),
+      );
+      return null;
+    } catch (err: any) {
+      throw new Error(err.message || "Something went wrong");
+    } finally {
+      setProcessing({ loading: false });
+    }
+  };
+
+  const updateIssueStatus = async (data: any) => {
+    if (processing.loading) return;
+    try {
+      await promiseToast(
+        apiCall({
+          issue_id: data.issue_id,
+          status: data.status,
+          updateStatus: data.updateStatus,
+          fineAmount: data.fineAmount,
+          fineReason: data.fineReason,
+        }),
+        {
+          pending: `Updating ${data.issue_id}...`,
+          success: {
+            render: () =>
+              `Book issue request ID:${data.issue_id} updated successfully!`,
+          },
+          error: {
+            render: ({ data }: { data: Error }) => data.message,
+          },
+        },
+      );
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+  const handleFineModalSubmit = (data) => {
+    updateIssueStatus({
+      ...data,
+      updateStatus: "Fine",
+    });
+  };
+
   return (
     <DashboardLayout>
       <div className="admin-book-issuer">
@@ -98,11 +183,13 @@ const BookIssuer = () => {
               value={sortBy[getFilteredData("sort")]}
               onChange={changeFIlter}
             >
-              {
-                Object.keys(sortBy).map((key, index) => {
-                  return <option key={index} value={key}>{sortBy[key]}</option>
-                })
-              }
+              {Object.keys(sortBy).map((key, index) => {
+                return (
+                  <option key={index} value={key}>
+                    {sortBy[key]}
+                  </option>
+                );
+              })}
             </CustomSelect>
           </div>
           <div className="button">
@@ -162,9 +249,9 @@ const BookIssuer = () => {
                         <button>
                           <PiDotsThreeOutlineVerticalDuotone />
                           <IssueRecordActionMenu
-                            issue_id={item.issue_id}
-                            currentStatus={item.status}
-                            setBookIssuers={setBookIssuers}
+                            modalData={item}
+                            updateIssueStatus={updateIssueStatus}
+                            openFineModal={setFineModalData}
                           />
                         </button>
                       </div>
@@ -177,6 +264,12 @@ const BookIssuer = () => {
           {bookIssuers.length === 0 && <p>No issue records found.</p>}
         </section>
       </div>
+      <FineModal
+        modalData={fineModalData}
+        setModalData={setFineModalData}
+        handleClose={closeFineModal}
+        onSubmit={handleFineModalSubmit}
+      />
     </DashboardLayout>
   );
 };

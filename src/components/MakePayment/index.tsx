@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import CheckoutForm from "./CheckoutForm";
+import CheckoutForm from "./components/CheckoutForm";
 import "./style.scss";
 
 import { IoClose } from "react-icons/io5";
@@ -12,10 +12,14 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-export default function Page() {
+const Index = ()  => {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    openModal()
+  }, [])
 
   const openModal = async () => {
     setIsOpen(true);
@@ -39,12 +43,8 @@ export default function Page() {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <button onClick={openModal} className="premium-trigger-btn">
-        Buy Premium Access
-      </button>
-
-      {isOpen && (
+    <div> 
+      {isOpen && clientSecret  && (
         <div className="checkout-overlay">
           <div className="checkout-modal">
             
@@ -109,3 +109,6 @@ export default function Page() {
     </div>
   );
 }
+
+
+export default Index;
