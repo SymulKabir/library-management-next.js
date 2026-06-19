@@ -10,6 +10,22 @@ export const POST = async (request: Request) => {
 
     const conn = await db();
 
+    // let query = `
+    //   SELECT 
+    //     ir.issue_id,
+    //     ir.student_id,
+    //     s.name AS student_name,
+    //     ir.book_id,
+    //     b.title AS book_title,
+    //     ir.issue_date,
+    //     ir.return_date,
+    //     ir.status
+    //   FROM issue_records ir
+    //   JOIN students s ON ir.student_id = s.student_id
+    //   JOIN books b ON ir.book_id = b.book_id
+    //   WHERE 1=1
+    //     AND ir.student_id = ?
+    // `;
     let query = `
       SELECT 
         ir.issue_id,
@@ -19,10 +35,15 @@ export const POST = async (request: Request) => {
         b.title AS book_title,
         ir.issue_date,
         ir.return_date,
-        ir.status
+        ir.status,
+        irf.fine_amount,
+        irf.fine_reason,
+        irfp.status as payment_status
       FROM issue_records ir
       JOIN students s ON ir.student_id = s.student_id
       JOIN books b ON ir.book_id = b.book_id
+      LEFT JOIN issue_record_fines irf ON ir.issue_id = irf.issue_id
+      LEFT JOIN issue_record_fine_payments irfp ON irf.fine_id = irfp.fine_id
       WHERE 1=1
         AND ir.student_id = ?
     `;

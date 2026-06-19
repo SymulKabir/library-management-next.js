@@ -64,9 +64,11 @@ export const PATCH = async (request: Request) => {
       [issue_id],
     );
     const record = rows[0]
+
+    console.log("record -->>", record)
  
 
-    if ((!record) {
+    if (!record) {
       return Response.json(
         { success: false, message: "Issue record not found" },
         { status: 404 },
@@ -79,21 +81,20 @@ export const PATCH = async (request: Request) => {
       );
     }
 
-    const issueRecord = (record as any[])[0];
 
     // 4. Update stock based on status change (Fixed to match capitalized VALID_STATUSES)
-    if (issueRecord.status !== status) {
+    if (record.status !== status) {
       if (status === "Issued") {
         // Decrease stock when issuing
         await conn.execute(
           "UPDATE books SET stock = stock - 1 WHERE book_id = ? AND stock > 0",
-          [issueRecord.book_id],
+          [record.book_id],
         );
       } else if (status === "Rejected" || status === "Returned") {
         // Increase stock when rejected or returned
         await conn.execute(
           "UPDATE books SET stock = stock + 1 WHERE book_id = ?",
-          [issueRecord.book_id],
+          [record.book_id],
         );
       }
     }

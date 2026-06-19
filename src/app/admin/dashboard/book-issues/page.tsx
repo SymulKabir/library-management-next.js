@@ -95,6 +95,9 @@ const BookIssuer = () => {
       const { success, message } = await response.json();
       if (!success) throw new Error(message || "Failed to update status");
 
+      if (updateStatus === "Fine") {
+        closeFineModal()
+      }
       setBookIssuers((state: any[]) =>
         state.map((b) => {
           if (b.issue_id === issue_id) {

@@ -8,18 +8,20 @@ interface Props {
   issue_id: string;
   currentStatus: string;
   setBookIssuers: (fn: any) => void;
+  setFineData: (fn: any) => void;
 }
 
 const IssueRecordActionMenu = ({
   issue_id,
   currentStatus,
   setBookIssuers,
+  setFineData
 }: Props) => {
   const [processing, setProcessing] = useState({ loading: false });
 
   const apiCall = async (status: string) => {
     setProcessing({ loading: true });
-    if (isDisabled()) {
+    if (isDisabled(status)) {
       throw new Error("Status is already set to the selected value");
       return null;
     }
@@ -83,7 +85,7 @@ const IssueRecordActionMenu = ({
       </button>
       <button
         disabled={currentStatus !== "Fine"}
-        onClick={() => updateIssueStatus("")}
+        onClick={() => setFineData(issue_id)}
       >
         <SlWallet /> Pay Fine
       </button>

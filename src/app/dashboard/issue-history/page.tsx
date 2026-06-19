@@ -28,7 +28,7 @@ const SORT_BY: Record<string, string> = {
 const IssueHistory = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
   const [filterInputs, setFilterInputs] = useState({});
-  const [showMakePaymentModal, setShowMakePaymentModal] = useState(false);
+  const [makePaymentModalData, setMakePaymentModalData] = useState(null)
 
   const fetchIssueRecords = async () => {
     try {
@@ -71,7 +71,15 @@ const IssueHistory = () => {
     return filterInputs[name] || "";
   };
   const closeMakePaymentModal = () => {
-
+    setMakePaymentModalData(null)
+  }
+  const setFineData = async (issue_id:string) => {
+    const findInfo = await bookIssuers.find((item) => item.issue_id === issue_id)
+    setFineData({
+      amount: "",
+      title:"", 
+      issue_id: ""
+    })
   }
   return (
     <DashboardLayout>
@@ -182,6 +190,7 @@ const IssueHistory = () => {
                             issue_id={item.issue_id}
                             currentStatus={item.status}
                             setBookIssuers={setBookIssuers}
+                            setFineData={setFineData}
                           />
                         </button>
                       </div>
@@ -194,9 +203,8 @@ const IssueHistory = () => {
           {bookIssuers.length === 0 && <p>No issue records found.</p>}
         </section>
       </div>
-      <MakePayment
-        amount={0}
-        showModal={showMakePaymentModal}
+      <MakePayment 
+        modalData={makePaymentModalData}
         closeModal={closeMakePaymentModal}
       />
     </DashboardLayout>

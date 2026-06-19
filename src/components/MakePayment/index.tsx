@@ -12,16 +12,16 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
 
-const Index = ({ amount = 0, showModal, closeModal }: any) => {
-  if (!showModal || !amount || Number(amount) <= 0) return null;
+const Index = ({ modalData, closeModal }: any) => {
+  if (!modalData || Number(modalData.amount) <= 0) return null;
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("Hello form ======================0------------>>>>>");
-    openModal(amount);
-  }, [amount, showModal]);
+    openModal();
+  }, [modalData]);
 
   const openModal = async () => {
     setLoading(true);
@@ -29,7 +29,7 @@ const Index = ({ amount = 0, showModal, closeModal }: any) => {
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
         body: JSON.stringify({
-          amount: Number(amount),
+          amount: Number(modalData.amount),
           currency: "usd",
         }),
       });
@@ -46,12 +46,11 @@ const Index = ({ amount = 0, showModal, closeModal }: any) => {
   //   setIsOpen(false);
   //   setClientSecret(null);
   // };
-  console.log("showModal -->>", showModal);
   console.log("clientSecret -->>", clientSecret);
 
   return (
     <div>
-      {showModal && clientSecret && (
+      {modalData && Number(modalData.amount) > 0 && clientSecret && (
         <div className="checkout-overlay">
           <div className="checkout-modal">
             <div className="checkout-modal__header">
@@ -70,13 +69,13 @@ const Index = ({ amount = 0, showModal, closeModal }: any) => {
               <div className="summary-card">
                 <div>
                   <span className="summary-card__label">
-                    Premium Membership
+                    {modalData.title}
                   </span>
                   <p className="summary-card__desc">
-                    Unlimited Book Issuance (1 Month)
+                    {modalData.title}
                   </p>
                 </div>
-                <div className="summary-card__price">$9.99</div>
+                <div className="summary-card__price">{`$${modalData.amount}`}</div>
               </div>
 
               {loading ? (
