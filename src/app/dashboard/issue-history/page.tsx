@@ -8,21 +8,30 @@ import { PiDotsThreeOutlineVerticalDuotone } from "react-icons/pi";
 import IssueRecordActionMenu from "./components/IssueRecordActionMenu/index";
 import { LuSettings2 } from "react-icons/lu";
 import { studentHeader } from "@/src/utils/header";
-import CustomSelect from '@/src/components/CustomSelect/index';
-const statuses = ["Pending", "Canaled", "Issued", "Rejected", "Returned"];
+import CustomSelect from "@/src/components/CustomSelect/index";
+import MakePayment from "@/src/components/MakePayment";
 
-const SORT_BY : Record<string, string> = {
+const statuses = [
+  "Pending",
+  "Canaled",
+  "Issued",
+  "Rejected",
+  "Returned",
+  "Fine",
+];
+
+const SORT_BY: Record<string, string> = {
   asc: "Oldest",
-  desc: "Newest"
-}
+  desc: "Newest",
+};
 
 const IssueHistory = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
   const [filterInputs, setFilterInputs] = useState({});
+  const [showMakePaymentModal, setShowMakePaymentModal] = useState(false);
 
   const fetchIssueRecords = async () => {
     try {
-
       const res = await fetch("/api/issue-records/student-records", {
         method: "POST",
         headers: { "Content-Type": "application/json", ...studentHeader() },
@@ -61,6 +70,9 @@ const IssueHistory = () => {
   const getFilteredData = (name) => {
     return filterInputs[name] || "";
   };
+  const closeMakePaymentModal = () => {
+
+  }
   return (
     <DashboardLayout>
       <div className="admin-book-issuer">
@@ -100,11 +112,13 @@ const IssueHistory = () => {
               value={SORT_BY[getFilteredData("sort")]}
               onChange={changeFIlter}
             >
-              {
-                Object.keys(SORT_BY).map((key, index) => {
-                  return <option key={index} value={key}>{SORT_BY[key]}</option>
-                })
-              }
+              {Object.keys(SORT_BY).map((key, index) => {
+                return (
+                  <option key={index} value={key}>
+                    {SORT_BY[key]}
+                  </option>
+                );
+              })}
             </CustomSelect>
           </div>
 
@@ -180,6 +194,11 @@ const IssueHistory = () => {
           {bookIssuers.length === 0 && <p>No issue records found.</p>}
         </section>
       </div>
+      <MakePayment
+        amount={0}
+        showModal={showMakePaymentModal}
+        closeModal={closeMakePaymentModal}
+      />
     </DashboardLayout>
   );
 };

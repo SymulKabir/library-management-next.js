@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { SlClose } from "react-icons/sl";
+import { SlClose, SlWallet } from "react-icons/sl";
 import "./styles.scss";
 import { promiseToast } from "@/src/utils/toast";
 
@@ -66,17 +66,26 @@ const IssueRecordActionMenu = ({
       console.error("Error:", err);
     }
   };
-  const isDisabled = () => {
-    return currentStatus !== "Pending";
+  const isDisabled = (status:string) => {
+    if (currentStatus === status) {
+      
+    }
+    return currentStatus === status || currentStatus !== "Pending";
   };
 
   return (
     <div className="action-book-menu">
       <button
-        disabled={isDisabled()}
+        disabled={isDisabled("Canaled")}
         onClick={() => updateIssueStatus("Canaled")}
       >
         <SlClose /> Canaled
+      </button>
+      <button
+        disabled={currentStatus !== "Fine"}
+        onClick={() => updateIssueStatus("")}
+      >
+        <SlWallet /> Pay Fine
       </button>
     </div>
   );

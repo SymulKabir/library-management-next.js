@@ -9,24 +9,29 @@ import { IoClose } from "react-icons/io5";
 import { HiOutlineCreditCard, HiOutlineShieldCheck } from "react-icons/hi2";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
 );
 
-const Index = ()  => {
+const Index = ({ amount = 0, showModal, closeModal }: any) => {
+  if (!showModal || !amount || Number(amount) <= 0) return null;
+
   const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    openModal()
-  }, [])
+    console.log("Hello form ======================0------------>>>>>");
+    openModal(amount);
+  }, [amount, showModal]);
 
   const openModal = async () => {
-    setIsOpen(true);
     setLoading(true);
     try {
       const res = await fetch("/api/create-payment-intent", {
         method: "POST",
+        body: JSON.stringify({
+          amount: Number(amount),
+          currency: "usd",
+        }),
       });
       const data = await res.json();
       setClientSecret(data.clientSecret);
@@ -37,17 +42,18 @@ const Index = ()  => {
     }
   };
 
-  const closeModal = () => {
-    setIsOpen(false);
-    setClientSecret(null);
-  };
+  // const closeModal = () => {
+  //   setIsOpen(false);
+  //   setClientSecret(null);
+  // };
+  console.log("showModal -->>", showModal);
+  console.log("clientSecret -->>", clientSecret);
 
   return (
-    <div> 
-      {isOpen && clientSecret  && (
+    <div>
+      {showModal && clientSecret && (
         <div className="checkout-overlay">
           <div className="checkout-modal">
-            
             <div className="checkout-modal__header">
               <div>
                 <h3 className="header-title">
@@ -63,8 +69,12 @@ const Index = ()  => {
             <div className="checkout-modal__body">
               <div className="summary-card">
                 <div>
-                  <span className="summary-card__label">Premium Membership</span>
-                  <p className="summary-card__desc">Unlimited Book Issuance (1 Month)</p>
+                  <span className="summary-card__label">
+                    Premium Membership
+                  </span>
+                  <p className="summary-card__desc">
+                    Unlimited Book Issuance (1 Month)
+                  </p>
                 </div>
                 <div className="summary-card__price">$9.99</div>
               </div>
@@ -77,19 +87,19 @@ const Index = ()  => {
                 </div>
               ) : (
                 clientSecret && (
-                  <Elements 
-                    stripe={stripePromise} 
-                    options={{ 
+                  <Elements
+                    stripe={stripePromise}
+                    options={{
                       clientSecret,
                       appearance: {
-                        theme: 'stripe',
+                        theme: "stripe",
                         variables: {
-                          colorPrimary: '#f59e0b',
-                          colorBackground: '#ffffff',
-                          colorText: '#1e293b',
-                          borderRadius: '8px',
-                        }
-                      }
+                          colorPrimary: "#f59e0b",
+                          colorBackground: "#ffffff",
+                          colorText: "#1e293b",
+                          borderRadius: "8px",
+                        },
+                      },
                     }}
                   >
                     <CheckoutForm />
@@ -102,13 +112,11 @@ const Index = ()  => {
               <HiOutlineShieldCheck size={20} className="shield-icon" />
               <span>Guaranteed safe & secure checkout by Stripe</span>
             </div>
-
           </div>
         </div>
       )}
     </div>
   );
-}
-
+};
 
 export default Index;

@@ -141,7 +141,8 @@
       &.returned,
       &.pending,
       &.rejected,
-      &.ban {
+      &.ban,
+      &.fine {
         p {
           font-weight: 600;
           padding: 3px 7px;
@@ -173,6 +174,9 @@
 
       &.rejected p {
         background-color: red;
+      } 
+      &.fine p {
+        background-color: #d90429; 
       }
     }
 

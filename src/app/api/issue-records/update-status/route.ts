@@ -8,7 +8,7 @@ export const PATCH = async (request: Request) => {
   try {
     const authHeader = request.headers.get("Authorization");
     const { admin_id } = decodedToken(authHeader);
-    console.log("admin_id -->>", admin_id)
+    console.log("admin_id -->>", admin_id);
     const body = await request.json();
     const { issue_id, status, fineAmount, fineReason, fineNotes } = body;
     console.log("body --->>", body);
@@ -48,15 +48,34 @@ export const PATCH = async (request: Request) => {
     conn = await db();
 
     // 3. Find existing issue record
-    const [record] = await conn.execute(
-      "SELECT issue_id, book_id, status FROM issue_records WHERE issue_id = ?",
+    // const [record] = await conn.execute(
+    //   "SELECT issue_id, book_id, status FROM issue_records WHERE issue_id = ?",
+    //   [issue_id],
+    // );
+    const [rows] = await conn.execute(
+      `SELECT 
+        ir.issue_id, 
+        ir.book_id, 
+        ir.status, 
+        irf.fine_amount
+      FROM issue_records ir
+      LEFT JOIN issue_record_fines irf ON ir.issue_id = irf.issue_id
+      WHERE ir.issue_id = ?`,
       [issue_id],
     );
+    const record = rows[0]
+ 
 
-    if ((record as any[]).length === 0) {
+    if ((!record) {
       return Response.json(
         { success: false, message: "Issue record not found" },
         { status: 404 },
+      );
+    }
+    if (status === "Fine" && record.fine_amount) {
+       return Response.json(
+        { success: false, message: "Fine already added" },
+        { status: 200 },
       );
     }
 
@@ -109,7 +128,7 @@ export const PATCH = async (request: Request) => {
           : "Status updated successfully",
     });
   } catch (error: any) {
-    console.log("error -->", error)
+    console.log("error -->", error);
     return Response.json(
       { success: false, message: error.message || "Server error" },
       { status: 500 },
