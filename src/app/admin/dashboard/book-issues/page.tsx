@@ -96,7 +96,7 @@ const BookIssuer = () => {
       if (!success) throw new Error(message || "Failed to update status");
 
       if (updateStatus === "Fine") {
-        closeFineModal()
+        closeFineModal();
       }
       setBookIssuers((state: any[]) =>
         state.map((b) => {
@@ -210,6 +210,7 @@ const BookIssuer = () => {
                 <th>Student ID</th>
                 <th>Student</th>
                 <th>Book</th>
+                <th>Fine Amount</th>
                 <th>Issued On</th>
                 <th>Return Date</th>
                 <th>Status</th>
@@ -234,6 +235,13 @@ const BookIssuer = () => {
                       {item.book_title}
                       <br />
                       <small>{item.book_id}</small>
+                    </td>
+                    <td>
+                      {item.fine_amount ? `$${item.fine_amount}` : "None"}
+                      <br />
+                      {item.fine_amount && item.payment_status && (
+                        <small>({item.payment_status})</small>
+                      )}
                     </td>
 
                     <td>{formatDate(item.issue_date)}</td>

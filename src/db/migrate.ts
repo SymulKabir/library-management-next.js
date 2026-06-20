@@ -103,7 +103,7 @@ const initIssueRecordFinesDB = async () => {
       issue_id INT NOT NULL,
       admin_id INT,
       fine_amount DECIMAL(10, 2) NOT NULL,
-      fine_reason VARCHAR(255) DEFAULT 'No reason specified',
+      fine_reason VARCHAR(255) DEFAULT '',
       fine_notes TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -120,8 +120,7 @@ const initIssueRecordFinePaymentsDB = async () => {
   await conn.execute(`
     CREATE TABLE issue_record_fine_payments (
       payment_id INT AUTO_INCREMENT PRIMARY KEY,
-      fine_id INT NOT NULL,
-      admin_id INT,
+      fine_id INT NOT NULL, 
       amount_paid DECIMAL(10, 2) NOT NULL,
       payment_method ENUM('Cash', 'bKash', 'Nagad', 'Rocket', 'Bank_Transfer') NOT NULL DEFAULT 'Cash',
       transaction_id VARCHAR(100) DEFAULT NULL,
@@ -129,7 +128,6 @@ const initIssueRecordFinePaymentsDB = async () => {
       status ENUM('Pending', 'Completed', 'Failed', 'Refunded') NOT NULL DEFAULT 'Completed',
       payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (fine_id) REFERENCES issue_record_fines(fine_id) ON DELETE CASCADE,
-      FOREIGN KEY (admin_id) REFERENCES admins(admin_id) ON DELETE SET NULL
     )
   `);
   await conn.end();

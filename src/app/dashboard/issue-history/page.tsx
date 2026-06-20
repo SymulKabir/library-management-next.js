@@ -27,8 +27,13 @@ const SORT_BY: Record<string, string> = {
 
 const IssueHistory = () => {
   const [bookIssuers, setBookIssuers] = useState<any[]>([]);
-  const [filterInputs, setFilterInputs] = useState({});
-  const [makePaymentModalData, setMakePaymentModalData] = useState(null)
+  const [filterInputs, setFilterInputs] = useState<any>({});
+  const [reloadData, setReloadData] = useState<boolean>(false);
+  const [makePaymentModalData, setMakePaymentModalData] = useState<{
+    amount: numer;
+    title: strinbg;
+    issue_id: string;
+  } | null>(null);
 
   const fetchIssueRecords = async () => {
     try {
@@ -47,7 +52,22 @@ const IssueHistory = () => {
 
   useEffect(() => {
     fetchIssueRecords();
-  }, []);
+  }, [reloadData]);
+
+  // useEffect(() => {
+  //   if (!makePaymentModalData) {
+  //     return
+  //   }
+  //   (async() => {
+  //     const res = await fetch("/api/make-payment", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json", ...studentHeader() },
+  //       body: JSON.stringify(makePaymentModalData),
+  //     });
+
+  //     const { data } = await res.json();
+  //   })()
+  // }, [makePaymentModalData])
 
   const formatDate = (dateStr: string | null) => {
     if (!dateStr) return "N/A";
@@ -58,29 +78,42 @@ const IssueHistory = () => {
       year: "numeric",
     });
   };
-  const capitalize = (word) => word.charAt(0).toUpperCase() + word.slice(1);
+  const capitalize = (word: string) =>
+    word.charAt(0).toUpperCase() + word.slice(1);
   const handleFilter = () => {
     // Implement filter logic here if needed
     fetchIssueRecords();
   };
-  const changeFIlter = (e) => {
+  const changeFIlter = (e: any) => {
     const { name, value } = e.target;
-    setFilterInputs((prev) => ({ ...prev, [name]: value }));
+    setFilterInputs((prev: any) => ({ ...prev, [name]: value }));
   };
-  const getFilteredData = (name) => {
+  const getFilteredData = (name: string) => {
     return filterInputs[name] || "";
   };
-  const closeMakePaymentModal = () => {
-    setMakePaymentModalData(null)
-  }
-  const setFineData = async (issue_id:string) => {
-    const findInfo = await bookIssuers.find((item) => item.issue_id === issue_id)
-    setFineData({
-      amount: "",
-      title:"", 
-      issue_id: ""
-    })
-  }
+  const closeMakePaymentModal = ({ reloadData }: any) => {
+    setMakePaymentModalData(null);
+    if (reloadData) {
+      setReloadData((pre) => !pre);
+    }
+  };
+  const setFineData = async (issue_id: string) => {
+    console.log("issue_id -->", issue_id);
+    bookIssuers.forEach((item) => {
+      console.log("forEach item ===>>", item);
+    });
+    const findInfo = await bookIssuers.find(
+      (item) => item.issue_id === issue_id,
+    );
+    console.log("filterInputs --->>>", filterInputs);
+    console.log("findInfo --->>>", findInfo);
+    if (!findInfo) return;
+    setMakePaymentModalData({
+      amount: Number(findInfo.fine_amount),
+      title: findInfo.book_title,
+      issue_id: findInfo.issue_id,
+    });
+  };
   return (
     <DashboardLayout>
       <div className="admin-book-issuer">
@@ -145,6 +178,7 @@ const IssueHistory = () => {
                 <th>Student ID</th>
                 <th>Student</th>
                 <th>Book</th>
+                <th>Fine Amount</th>
                 <th>Issued On</th>
                 <th>Return Date</th>
                 <th>Status</th>
@@ -170,6 +204,13 @@ const IssueHistory = () => {
                       <br />
                       <small>{item.book_id}</small>
                     </td>
+                    <td>
+                      {item.fine_amount ? `$${item.fine_amount}` : "None"}
+                      <br />
+                      {item.fine_amount && item.payment_status && (
+                        <small>({item.payment_status})</small>
+                      )}
+                    </td>
 
                     <td>{formatDate(item.issue_date)}</td>
 
@@ -191,6 +232,7 @@ const IssueHistory = () => {
                             currentStatus={item.status}
                             setBookIssuers={setBookIssuers}
                             setFineData={setFineData}
+                            disablePayFine={item.fine_amount && item.payment_status}
                           />
                         </button>
                       </div>
@@ -203,7 +245,7 @@ const IssueHistory = () => {
           {bookIssuers.length === 0 && <p>No issue records found.</p>}
         </section>
       </div>
-      <MakePayment 
+      <MakePayment
         modalData={makePaymentModalData}
         closeModal={closeMakePaymentModal}
       />

@@ -15,10 +15,16 @@ export const POST = async (request: Request) => {
         b.title AS book_title,
         ir.issue_date,
         ir.return_date,
-        ir.status
+        ir.status,
+        irf.fine_amount,
+        irf.fine_reason,
+        irfp.status AS payment_status,
+        irfp.transaction_id 
       FROM issue_records ir
       JOIN students s ON ir.student_id = s.student_id
       JOIN books b ON ir.book_id = b.book_id
+      LEFT JOIN issue_record_fines irf ON ir.issue_id = irf.issue_id
+      LEFT JOIN issue_record_fine_payments irfp ON irfp.fine_id = irf.fine_id
       WHERE 1=1
     `;
 

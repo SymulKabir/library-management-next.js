@@ -19,7 +19,6 @@ const Index = ({ modalData, closeModal }: any) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    console.log("Hello form ======================0------------>>>>>");
     openModal();
   }, [modalData]);
 
@@ -42,12 +41,6 @@ const Index = ({ modalData, closeModal }: any) => {
     }
   };
 
-  // const closeModal = () => {
-  //   setIsOpen(false);
-  //   setClientSecret(null);
-  // };
-  console.log("clientSecret -->>", clientSecret);
-
   return (
     <div>
       {modalData && Number(modalData.amount) > 0 && clientSecret && (
@@ -68,12 +61,8 @@ const Index = ({ modalData, closeModal }: any) => {
             <div className="checkout-modal__body">
               <div className="summary-card">
                 <div>
-                  <span className="summary-card__label">
-                    {modalData.title}
-                  </span>
-                  <p className="summary-card__desc">
-                    {modalData.title}
-                  </p>
+                  <span className="summary-card__label">FINE OF</span>
+                  <p className="summary-card__desc">{modalData.title}</p>
                 </div>
                 <div className="summary-card__price">{`$${modalData.amount}`}</div>
               </div>
@@ -98,10 +87,13 @@ const Index = ({ modalData, closeModal }: any) => {
                           colorText: "#1e293b",
                           borderRadius: "8px",
                         },
-                      },
+                      }, 
                     }}
                   >
-                    <CheckoutForm />
+                    <CheckoutForm
+                      modalData={modalData}
+                      closeModal={closeModal}
+                    />
                   </Elements>
                 )
               )}

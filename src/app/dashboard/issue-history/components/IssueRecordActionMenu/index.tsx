@@ -7,6 +7,7 @@ import { promiseToast } from "@/src/utils/toast";
 interface Props {
   issue_id: string;
   currentStatus: string;
+  disablePayFine: boolean;
   setBookIssuers: (fn: any) => void;
   setFineData: (fn: any) => void;
 }
@@ -14,6 +15,7 @@ interface Props {
 const IssueRecordActionMenu = ({
   issue_id,
   currentStatus,
+  disablePayFine,
   setBookIssuers,
   setFineData
 }: Props) => {
@@ -84,7 +86,7 @@ const IssueRecordActionMenu = ({
         <SlClose /> Canaled
       </button>
       <button
-        disabled={currentStatus !== "Fine"}
+        disabled={currentStatus !== "Fine" || disablePayFine}
         onClick={() => setFineData(issue_id)}
       >
         <SlWallet /> Pay Fine
