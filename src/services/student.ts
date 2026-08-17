@@ -12,13 +12,20 @@ interface Student {
   created_at: number;
 }
 
-export const checkStudentSignin = async ({ host, token: tokenInput }: CheckSigninProps): Promise<Student | null> => {
+export const checkStudentSignin = async ({
+  host,
+  token: tokenInput,
+}: CheckSigninProps): Promise<Student | null> => {
   try {
     const token = tokenInput || getStudentToken();
 
     if (!token || token == undefined) return null;
+    console.log("host --->>>", host);
+    const URL = host
+      ? `${host}/api/students/check-signin`
+      : `/api/students/check-signin`;
+    console.log("URL --->>>", URL);
 
-    const URL = host ? `${host}/api/students/check-signin` : `/api/students/check-signin`;
     const response = await fetch(URL, {
       method: "GET",
       headers: {
@@ -33,7 +40,7 @@ export const checkStudentSignin = async ({ host, token: tokenInput }: CheckSigni
 
     const { data } = await response.json();
     return data || null;
-  } catch (error:any) {
+  } catch (error: any) {
     return null;
   }
 };

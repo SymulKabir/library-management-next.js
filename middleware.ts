@@ -7,11 +7,17 @@ const REGISTER_USER_NOT_ALLOW_ROUTES = ["/signin", "/signup"];
 const isProtectedRoute = (route: string, prefix: string) =>
   route.startsWith(prefix);
 
-export const middleware = async (request:any) => {
+export const middleware = async (request: any) => {
   try {
     const route = request.nextUrl.pathname;
-    const host = request.nextUrl.origin;
+    // const host = request.nextUrl.origin;
+    const forwardedHost = request.headers.get("x-forwarded-host");
+    const forwardedProto = request.headers.get("x-forwarded-proto");
 
+    const host = forwardedHost
+      ? `${forwardedProto || "https"}://${forwardedHost}`
+      : request.nextUrl.origin;
+    
     // Detect type of area (admin / student / public)
     const isAdminArea = route.startsWith("/admin");
     const isStudentArea = route.startsWith("/dashboard");
@@ -36,10 +42,10 @@ export const middleware = async (request:any) => {
 
     // ===== STUDENT AUTH CHECK =====
     if (isStudentArea) {
+
       const token = request.cookies.get("student-auth-token")?.value || null;
 
       const student = await checkStudentSignin({ host, token });
-
       if (!student || !student.student_id) {
         return NextResponse.redirect(new URL("/signin", request.url));
       }
@@ -55,7 +61,6 @@ export const middleware = async (request:any) => {
     if (isAuthPage) {
       const adminToken = request.cookies.get("admin-auth-token")?.value;
       const studentToken = request.cookies.get("student-auth-token")?.value;
-
       let admin = null;
       let student = null;
 
@@ -71,18 +76,12 @@ export const middleware = async (request:any) => {
     }
 
     return NextResponse.next();
-  } catch (error:any) {
-    console.error("Middleware Error:", error);
+  } catch (error: any) {
+    console.log("Middleware Error:", error);
     return NextResponse.next();
   }
 };
 
 export const config = {
-  matcher: [
-    "/",
-    "/signin",
-    "/signup",
-    "/admin/:path*",
-    "/dashboard/:path*",
-  ],
+  matcher: ["/", "/signin", "/signup", "/admin/:path*", "/dashboard/:path*"],
 };
