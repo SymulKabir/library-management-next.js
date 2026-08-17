@@ -1,0 +1,220 @@
+// Keyframe Animations
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleUp {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+// 2. Checkout Modal Layout
+.checkout-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  animation: fadeInOverlay 0.2s ease-out forwards;
+
+  .checkout-modal {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    height: 80%;
+    max-height: 90vh;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+    overflow-y: scroll;
+    animation: modalScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    &__header {
+      background: linear-gradient(to right, rgba(245, 158, 11, 0.08), rgba(234, 88, 12, 0.08));
+      padding: 1.5rem;
+      padding-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+
+      .header-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        .card-icon {
+          color: #f59e0b;
+        }
+      }
+
+      .header-subtitle {
+        font-size: 0.75rem;
+        color: #64748b;
+        margin-top: 0.25rem;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        color: #94a3b8;
+        padding: 0.25rem;
+        border-radius: 9999px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+
+        &:hover {
+          color: #475569;
+          background-color: #f1f5f9;
+        }
+      }
+    }
+
+    &__body {
+      padding: 1.5rem;
+
+      .summary-card {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-radius: 0.75rem;
+        background-color: #f8fafc;
+        border: 1px solid #f1f5f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &__label {
+          font-size: 0.75rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          color: #d97706;
+        }
+
+        &__desc {
+          font-size: 0.875rem;
+          color: #475569;
+          margin-top: 0.125rem;
+        }
+
+        &__price {
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: #1e293b;
+        }
+      }
+    }
+
+    &__footer {
+      background-color: #f8fafc;
+      padding: 1rem;
+      border-t: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: #94a3b8;
+
+      .shield-icon {
+        color: #10b981;
+      }
+    }
+  }
+}
+
+// 3. Payment Form Elements
+.stripe-payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .elements-wrapper {
+    min-height: 150px;
+  }
+
+  .error-message {
+    font-size: 0.875rem;
+    color: #dc2626;
+    background-color: #fef2f2;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid #fee2e2;
+  }
+
+  .submit-payment-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.875rem;
+    background: linear-gradient(to right, #f59e0b, #ea580c);
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(to right, #d97706, #c2410c);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .spinner-icon {
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+// 4. Skeleton Pulse Loader
+.skeleton-loader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem 0;
+
+  &__bar {
+    height: 2.5rem;
+    background-color: #e2e8f0;
+    border-radius: 0.5rem;
+    width: 100%;
+    animation: pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  &__btn {
+    @extend .skeleton-loader__bar;
+    height: 3rem;
+    background-color: #fde68a;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .5; }
+}

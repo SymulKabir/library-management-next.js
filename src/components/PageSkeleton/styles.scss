@@ -1,0 +1,67 @@
+/* Skeleton Shimmer Animation & Base Styles */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton-app {
+  background-color: #f9f9f9;
+  min-height: 100vh;
+}
+
+/* Reusable Shimmer Effect */
+.skeleton-logo,
+.skeleton-search,
+.skeleton-nav-link,
+.skeleton-avatar,
+.skeleton-hero-main,
+.skeleton-sub-box,
+.skeleton-section-title,
+.skeleton-card {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* Navbar */
+.skeleton-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 30px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.skeleton-logo {
+  width: 120px;
+  height: 30px;
+}
+
+.skeleton-search {
+  width: 400px;
+  height: 40px;
+  border-radius: 50px;
+}
+
+.skeleton-nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.skeleton-nav-link {
+  width: 50px;
+  height: 20px;
+}
+
+.skeleton-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+}

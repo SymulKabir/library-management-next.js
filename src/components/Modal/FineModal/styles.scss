@@ -1,0 +1,218 @@
+/* ==========================================================
+   Awesome Fine Modal Structure (Pure CSS Variable Native Scoped)
+   ========================================================== */
+
+.fine-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(30, 41, 59, 0.45); /* Soft, blurred layout dimming backdrop */
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: modalFadeIn 0.2s ease-out;
+}
+
+.fine-modal-card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 540px;
+  border-radius: 14px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.fine-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px;
+  border-bottom: 1px solid #f1f5f9;
+
+  .title-area {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+
+    .icon-badge {
+      background-color: #e6f4ea; /* Light minimal green backdrop ring */
+      color: #2e7d32;
+      padding: 10px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .title-meta {
+      h3 {
+        margin: 0 0 6px 0;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #1e293b;
+        letter-spacing: 0.5px;
+      }
+      p {
+        margin: 2px 0;
+        font-size: 0.875rem;
+        color: #64748b;
+        font-weight: 400;
+
+        .highlight {
+          color: #334155;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .close-x-btn {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    display: flex;
+    transition: all 0.2s ease;
+
+    &:hover {
+      color: #334155;
+      background-color: #f1f5f9;
+    }
+  }
+}
+
+.fine-modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .fine-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #1e293b;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: #334155;
+      outline: none;
+      transition: all 0.2s ease;
+
+      &::placeholder {
+        color: #94a3b8;
+      }
+
+      &:focus {
+        border-color: #2e7d32;
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+      }
+    }
+
+    /* Embedded Inline currency styling prefix alignment */
+    .input-with-addon {
+      display: flex;
+      align-items: center;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding-left: 14px;
+      transition: all 0.2s ease;
+
+      &:focus-within {
+        border-color: #2e7d32;
+        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+      }
+
+      .addon-currency {
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        margin-right: 2px;
+        user-select: none;
+      }
+
+      input {
+        width: 100%;
+        border: none;
+        outline: none;
+        padding: 12px 14px 12px 6px;
+        font-size: 0.95rem;
+        color: #334155;
+        background: transparent;
+      }
+    }
+  }
+}
+
+.fine-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 14px;
+  padding: 20px 24px;
+  background-color: #ffffff;
+
+  button {
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    outline: none;
+
+    &.btn-cancel {
+      background-color: #f1f5f9;
+      color: #475569;
+
+      &:hover {
+        background-color: #e2e8f0;
+        color: #1e293b;
+      }
+    }
+
+    &.btn-submit {
+      background-color: #2e7d32; /* Rich dashboard green confirmation action tone */
+      color: #ffffff;
+
+      &:hover {
+        background-color: #215c24;
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+/* Animations declarations */
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

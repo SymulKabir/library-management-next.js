@@ -1,0 +1,25 @@
+.doc-view-page  { 
+
+  .doc-section {
+    flex: 1;
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    margin: 30px 0px;
+
+    h1 { font-size: 36px; margin-bottom: 40px; }
+    .exp-section {
+      padding-bottom: 40px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid #f0f0f0;
+      h2 { color: #f68f11; margin-bottom: 20px; }
+      p { line-height: 1.8; color: #444; }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .experience-layout { flex-direction: column; }
+  .exp-sidebar { position: relative; top: 0; }
+}

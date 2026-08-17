@@ -1,0 +1,16 @@
+.categories .inner-categories a {
+    background-color: #FFFFFF !important;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.categories .inner-categories a p {
+    color: #a8a7a7;
+
+}

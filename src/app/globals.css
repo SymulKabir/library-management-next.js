@@ -1,0 +1,72 @@
+@import url("@/src/styles/global.scss");
+@import url("@/src/styles/style-controls.scss");
+
+:root {
+  /* --background: #ffffff; */
+  --background: rgb(255 255 255 / 1);
+  --background: #f8f9fa;
+  --primary-background: #f68f11;
+  --foreground: #171717;
+  --primary-text-color: #4e4d4d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+html {
+  width: 100vw;
+  body {
+    width: 100vw;
+    max-width: 100vw;
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+    overflow-x: hidden;
+    background-color: var(--background);
+  }
+}
+
+.container {
+  width: 100%;
+  max-width: 1640px;
+  margin: 0 auto;  
+
+  @media (max-width: 1640px) {
+    padding: 0 40px;
+  }
+
+  @media (max-width: 980px) {
+    padding: 0 30px;
+  }
+  @media (max-width: 580px) {
+    padding: 0 20px;
+  }
+}
+.light-shadow {
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 14px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

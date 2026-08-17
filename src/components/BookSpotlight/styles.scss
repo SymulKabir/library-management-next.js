@@ -1,0 +1,13 @@
+.home-wrapper {
+  .curated-section {
+    padding: 20px 0;
+    background-color: #fef1e5;
+
+    .horizontal-scroll {
+      padding: 20px 0; // Added padding to prevent cut-off during scale
+      cursor: grab;
+
+      
+    }
+  }
+}

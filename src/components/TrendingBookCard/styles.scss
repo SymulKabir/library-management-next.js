@@ -1,0 +1,103 @@
+.trending-book-cart {
+  position: relative;
+  padding: 0px;
+  background-color: #fef1e5;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  height: 100%;
+  min-width: 150px;
+
+  &.skeleton-card {
+    cursor: default;
+    background-color: #f9f4ef;
+    width: 100%;
+
+    .skeleton-img {
+      width: 100%;
+      height: 120px;
+      background: linear-gradient(90deg, #eceff1 25%, #f7f9fa 50%, #eceff1 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 7px;
+    }
+
+    .book-details {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+
+      .skeleton-title {
+        width: 90%;
+        height: 12px;
+        background: linear-gradient(
+          90deg,
+          #eceff1 25%,
+          #f7f9fa 50%,
+          #eceff1 75%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.5s infinite;
+        border-radius: 4px;
+
+        &.short {
+          width: 60%;
+        }
+      }
+    }
+  }
+  a {
+    text-decoration: none;
+    .card-img {
+      width: 100%;
+      max-width: 100%;
+
+      height: fit-content;
+
+      display: flex;
+      justify-content: center;
+      border-radius: 7px;
+      overflow: hidden;
+
+      img {
+        width: auto;
+        height: 120px;
+      }
+    }
+
+    .book-details {
+      margin-top: 10px;
+
+      h6 {
+        text-align: center;
+        font-size: 12px;
+        color: var(--primary-background);
+
+        /* Limit to 2 lines */
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        /* Fixed height for exactly 2 lines */
+        line-height: 1.4;
+        height: calc(1.4em * 2);
+      }
+    }
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
