@@ -4,6 +4,7 @@ import "./globals.css";
 import "sass";
 import { ToastContainer } from "react-toastify";
 import StoreProvider from "./StoreProvider";
+import SearchFeatureIntro from "@/src/components/SearchFeatureIntro";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,7 +32,7 @@ export default function RootLayout({
         <body>
           {children}
           <ToastContainer />
-           
+           <SearchFeatureIntro/>
         </body>
       </html>
     </StoreProvider>

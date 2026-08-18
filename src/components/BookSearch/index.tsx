@@ -30,7 +30,7 @@ const Index: React.FC = () => {
   useEffect(() => {
     if (!filterInput.search) {
       setProgressing(false);
-      setBooks([])
+      setBooks([]);
       return;
     }
     const handler = setTimeout(async () => {
@@ -41,7 +41,7 @@ const Index: React.FC = () => {
           limit: 20,
         });
         setBooks(data?.data || []);
-      } catch (error:any) {
+      } catch (error: any) {
         console.error("Search error:", error);
         setBooks([]);
       } finally {
@@ -114,7 +114,7 @@ const Index: React.FC = () => {
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Recording error:", error);
       setIsRecording(false);
     }
@@ -160,7 +160,7 @@ const Index: React.FC = () => {
   return (
     <section className="book-search-section">
       <div className={getContainerClass()}>
-        <button className="img-section" name="">
+        <button className="img-section"   data-search-ai-highlight>
           <LuImage />
           <input type="file" onChange={handleImgUpload} />
         </button>
@@ -168,6 +168,7 @@ const Index: React.FC = () => {
         <button
           onClick={toggleRecording}
           className={`icon-btn mic-btn ${isRecording ? "active" : ""}`}
+          data-search-ai-highlight
         >
           <LuMic />
         </button>
